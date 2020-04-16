@@ -237,7 +237,7 @@ arduino.prototype.setStatus = function (newVal, next) {
 	this._makeRequest((newVal ? "?enable" : "?disable") + "&auth=" + this.auth+"&uuid="+this.uuid, next, true);
 };
 
-arduino.prototype.setStatusToggle = function () {
+arduino.prototype.setStatusToggle = function (next) {
 	this.log("toggle go");
 	this._makeRequest("?toggle" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
 };
@@ -364,7 +364,7 @@ arduino.prototype._responseHandler = function (res, next, timing) {
 				if(this.duration > 0 && this.AccessoryType == 0 && timing == true){
 					this.log("d 1");
 					setTimeout(function() {
-						self.setStatusToggle();
+						self.setStatusToggle(next);
 					}, (this.duration*1000));
 				}
 				if (jsonBody.status == true){
