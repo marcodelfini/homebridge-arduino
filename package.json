@@ -1,6 +1,6 @@
 {
   "name": "homebridge-arduino",
-  "version": "0.0.221",
+  "version": "0.0.222",
   "description": "Arduino Switch for Homebridge",
   "main": "index.js",
   "scripts": {
