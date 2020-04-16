@@ -349,6 +349,7 @@ arduino.prototype.setLockTargetState = function (newVal, next) {
 
 
 arduino.prototype._responseHandler = function (res, next, timing) {
+	const self = this;
 	let body = "";
 
 	res.on("data", (data) => { body += data; });
@@ -363,7 +364,7 @@ arduino.prototype._responseHandler = function (res, next, timing) {
 				if(this.duration > 0 && this.AccessoryType == 0 && timing == true){
 					this.log("d 1");
 					setTimeout(function() {
-						this.setStatusToggle();
+						self.setStatusToggle();
 					}, (this.duration*1000));
 				}
 				if (jsonBody.status == true){
