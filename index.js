@@ -374,6 +374,7 @@ arduino.prototype._responseHandler = function (res, next, timing) {
 					next(null, false);
 				}
 			} else if (typeof jsonBody.toggle !== 'undefined') {
+				clearTimeout(this.timer);
 				if(jsonBody.toggle == true){
 					this.log("t 1");
 					this.functionService.setCharacteristic(Characteristic.On, true);
