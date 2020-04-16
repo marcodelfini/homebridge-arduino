@@ -245,7 +245,7 @@ arduino.prototype.setStatus = function (newVal, next) {
 			setTimeout(function() {
 				self.log("Toggle");
 				self.toggle = true;
-				self._makeRequest("?toggle" + "&auth=" + this.auth+"&uuid="+this.uuid);
+				self._makeRequest("?toggle" + "&auth=" + self.auth+"&uuid="+self.uuid);
 			}, (this.duration*1000));
 		}
 	}
