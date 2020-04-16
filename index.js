@@ -375,10 +375,12 @@ arduino.prototype._responseHandler = function (res, next, timing) {
 			} else if (typeof jsonBody.toggle !== 'undefined') {
 				if(jsonBody.toggle == true){
 					this.log("t 1");
-					this.functionService.setCharacteristic(Characteristic.On, true);
+					//this.functionService.setCharacteristic(Characteristic.On, true);
+					next(null, true);
 				}else{
 					this.log("t 2");
-					this.functionService.setCharacteristic(Characteristic.On, false);
+					//this.functionService.setCharacteristic(Characteristic.On, false);
+					next(null, false);
 				}
 			// Light Bulb
 			} else if (typeof jsonBody.Brightness !== 'undefined') {
