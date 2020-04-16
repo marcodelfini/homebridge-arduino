@@ -27,6 +27,8 @@ function arduino(log, config) {
 	
 	this.duration = parseInt(config["duration"]) || 0;
 	
+	this.defaultState = config["default-state"] || 0;
+	
 	this.uuid = UUIDGen.generate("uuid-hb-gen_"+this.Serial);
 	
 	this.toggle = false;
@@ -66,6 +68,8 @@ arduino.prototype.getServices = function () {
 	
 	if(this.AccessoryType == 1){ // Lightbulb
 		var functionService = new Service.Lightbulb(this.Name);
+		functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState);
+		
 		functionService.getCharacteristic(Characteristic.On)
 			.on("get", this.getStatus.bind(this))
 			.on("set", this.setStatus.bind(this));
@@ -128,6 +132,8 @@ arduino.prototype.getServices = function () {
 		}
 	}else if(this.AccessoryType == 2){ // Outlet
 		var functionService = new Service.Outlet(this.Name);
+		functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState);
+
 		functionService.getCharacteristic(Characteristic.On)
 			.on("get", this.getStatus.bind(this))
 			.on("set", this.setStatus.bind(this));
@@ -153,6 +159,8 @@ arduino.prototype.getServices = function () {
 			.on("get", this.getHumidity.bind(this));
 	}else if(this.AccessoryType == 5){ // Fan
 		var functionService = new Service.Fan(this.Name);
+		functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState);
+		
 		functionService.getCharacteristic(Characteristic.On)
 			.on("get", this.getStatus.bind(this))
 			.on("set", this.setStatus.bind(this));
@@ -217,6 +225,8 @@ arduino.prototype.getServices = function () {
 			.on("get", this.getStatus.bind(this));
 	}else{ // Switch (0)
 		var functionService = new Service.Switch(this.Name);
+		functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState);
+		
 		functionService.getCharacteristic(Characteristic.On)
 			.on("get", this.getStatus.bind(this))
 			.on("set", this.setStatus.bind(this));
@@ -240,21 +250,15 @@ arduino.prototype.setStatus = function (newVal, next) {
 	var AccessoryToggle = [0,1,2];
 	if(this.toggle == false){
 		this.log("setStatus");
-		this._makeRequest((newVal ? "?enable" : "?disable") + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+		this._makeRequest((newVal ? "?enable" : "?disable") + "&auth=" + this.auth + "&uuid=" + this.uuid, next);
 		if(this.duration > 0 && AccessoryToggle.includes(this.AccessoryType) == true && this.toggle == false){
 			setTimeout(function() {
 				self.log("Toggle");
 				self.toggle = true;
-				self._makeRequest("?toggle" + "&auth=" + self.auth+"&uuid="+self.uuid);
+				self._makeRequest((newVal ? "?disable" : "?enable") + "&auth=" + self.auth + "&uuid="+self.uuid);
 			}, (this.duration*1000));
 		}
 	}
-};
-
-arduino.prototype.setStatusToggle = function () {
-	this.log("Toggle1");
-	this.toggle = true;
-	this._makeRequest("?toggle" + "&auth=" + this.auth+"&uuid="+this.uuid);
 };
 
 // Lightbulb

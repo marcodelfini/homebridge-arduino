@@ -160,6 +160,27 @@
                 "required": false,
                 "description": "Time in second (default is 0 not active): SWITCH: time to Toggle State (becomes a button)."
             },
+            "default-state": {
+                "title": "Default State",
+                "type": "boolean",
+                "placeholder": false,
+                "default": false,
+                "oneOf": [
+                    {
+                        "title": "Off (0)",
+                        "enum": [
+                            false
+                        ]
+                    },
+                    {
+                        "title": "On (1)",
+                        "enum": [
+                            true
+                        ]
+                    }
+                ],
+                "description": "Default State (begin state, or return state if duration is setted)."
+            },
             "logLevel": {
                 "title": "Loging level",
                 "type": "integer",
