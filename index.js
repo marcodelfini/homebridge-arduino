@@ -230,18 +230,15 @@ arduino.prototype.getServices = function () {
 
 // All
 arduino.prototype.getStatus = function (next) {
-	this.log("status go");
 	this._makeRequest("?status" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
 };
 
 arduino.prototype.setStatus = function (newVal, next) {
 	const self = this;
-	this.log("change go");
 	
 	if(this.toggle == false){
 		this._makeRequest((newVal ? "?enable" : "?disable") + "&auth=" + this.auth+"&uuid="+this.uuid, next);
 		if(this.duration > 0 && this.AccessoryType == 0 && this.toggle == false){
-			this.log("d 1");
 			setTimeout(function() {
 				self.setStatusToggle();
 			}, (this.duration*1000));
@@ -250,7 +247,6 @@ arduino.prototype.setStatus = function (newVal, next) {
 };
 
 arduino.prototype.setStatusToggle = function () {
-	this.log("toggle go");
 	this.toggle = true;
 	this._makeRequest("?toggle" + "&auth=" + this.auth+"&uuid="+this.uuid);
 };
@@ -380,12 +376,10 @@ arduino.prototype._responseHandler = function (res, next) {
 				}
 			} else if (typeof jsonBody.toggle !== 'undefined') {
 				if(jsonBody.toggle == true){
-					this.log("t 1");
 					this.functionService.setCharacteristic(Characteristic.On, true);
 					this.toggle = false;
 					return;
 				}else{
-					this.log("t 2");
 					this.functionService.setCharacteristic(Characteristic.On, false);
 					this.toggle = false;
 					return;
