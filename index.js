@@ -243,7 +243,7 @@ arduino.prototype.setStatus = function (newVal, next) {
 		this._makeRequest((newVal ? "?enable" : "?disable") + "&auth=" + this.auth+"&uuid="+this.uuid, next);
 		if(this.duration > 0 && AccessoryToggle.includes(this.AccessoryType) == true && this.toggle == false){
 			setTimeout(function() {
-				this.log("Toggle actualize");
+				self.log("Toggle actualize");
 				self.setStatusToggle();
 			}, (this.duration*1000));
 		}
