@@ -1,0 +1,20 @@
+{
+  "name": "homebridge-arduino",
+  "version": "0.0.182",
+  "description": "Arduino Switch for Homebridge",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js && echo \"No syntax errors! (node $(node -v))\""
+  },
+  "keywords": [
+    "homebridge-plugin",
+    "arduino"
+  ],
+  "author": "Marco Delfini",
+  "license": "MIT",
+  "dependencies": {},
+  "engines": {
+    "node": ">=6.0.0",
+    "homebridge": ">=0.2.0"
+  }
+}
