@@ -239,7 +239,7 @@ arduino.prototype.setStatus = function (newVal, next) {
 
 arduino.prototype.setStatusToggle = function () {
 	this.log("toggle go");
-	this._makeRequest("?toggle" + "&auth=" + this.auth+"&uuid="+this.uuid);
+	this._makeRequest("?toggle" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
 };
 
 // Lightbulb
