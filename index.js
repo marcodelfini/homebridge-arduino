@@ -29,6 +29,8 @@ function arduino(log, config) {
 	
 	this.uuid = UUIDGen.generate("uuid-hb-gen_"+this.Serial);
 	
+	this.toggle = flase;
+	
 	/* AccessoryType
 	0: Switch
 	1: Lightbulb
@@ -232,13 +234,13 @@ arduino.prototype.getStatus = function (next) {
 	this._makeRequest("?status" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
 };
 
-arduino.prototype.setStatus = function (newVal, next, toggle = false) {
+arduino.prototype.setStatus = function (newVal, next) {
 	const self = this;
 	this.log("change go");
 	
-	if(toggle == false){
+	if(this.toggle == false){
 		this._makeRequest((newVal ? "?enable" : "?disable") + "&auth=" + this.auth+"&uuid="+this.uuid, next);
-		if(this.duration > 0 && this.AccessoryType == 0){
+		if(this.duration > 0 && this.AccessoryType == 0 && this.toggle == false){
 			this.log("d 1");
 			setTimeout(function() {
 				self.setStatusToggle();
@@ -249,7 +251,8 @@ arduino.prototype.setStatus = function (newVal, next, toggle = false) {
 
 arduino.prototype.setStatusToggle = function () {
 	this.log("toggle go");
-	this._makeRequest("?toggle" + "&auth=" + this.auth+"&uuid="+this.uuid, null, true);
+	this.toggle = true;
+	this._makeRequest("?toggle" + "&auth=" + this.auth+"&uuid="+this.uuid);
 };
 
 // Lightbulb
@@ -358,7 +361,7 @@ arduino.prototype.setLockTargetState = function (newVal, next) {
 
 
 
-arduino.prototype._responseHandler = function (res, next, toggle = false) {
+arduino.prototype._responseHandler = function (res, next) {
 	let body = "";
 
 	res.on("data", (data) => { body += data; });
@@ -376,13 +379,14 @@ arduino.prototype._responseHandler = function (res, next, toggle = false) {
 					next(null, false);
 				}
 			} else if (typeof jsonBody.toggle !== 'undefined') {
+				this.toggle = false;
 				if(jsonBody.toggle == true){
 					this.log("t 1");
-					this.functionService.setCharacteristic(Characteristic.On, true, true);
+					this.functionService.setCharacteristic(Characteristic.On, true);
 					return;
 				}else{
 					this.log("t 2");
-					this.functionService.setCharacteristic(Characteristic.On, false, true);
+					this.functionService.setCharacteristic(Characteristic.On, false);
 					return;
 				}
 			// Light Bulb
@@ -469,7 +473,7 @@ arduino.prototype._responseHandler = function (res, next, toggle = false) {
 	});
 };
 
-arduino.prototype._makeRequest = function (path, next, toggle = false) {
+arduino.prototype._makeRequest = function (path, next) {
 	this.log(path);
 	let req = http.get({
 		host: this.host,
