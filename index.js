@@ -237,9 +237,9 @@ arduino.prototype.setStatus = function (newVal, next) {
 	this._makeRequest((newVal ? "?enable" : "?disable") + "&auth=" + this.auth+"&uuid="+this.uuid, next, true);
 };
 
-arduino.prototype.setStatusToggle = function (next) {
+arduino.prototype.setStatusToggle = function () {
 	this.log("toggle go");
-	this._makeRequest("?toggle" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+	this._makeRequest("?toggle" + "&auth=" + this.auth+"&uuid="+this.uuid);
 };
 
 // Lightbulb
@@ -361,26 +361,24 @@ arduino.prototype._responseHandler = function (res, next, timing) {
 			
 			// All
 			if (typeof jsonBody.status !== 'undefined') {
-				if(this.duration > 0 && this.AccessoryType == 0 && timing == true){
-					this.log("d 1");
-					setTimeout(function() {
-						self.setStatusToggle(next);
-					}, (this.duration*1000));
-				}
 				if (jsonBody.status == true){
 					next(null, true);
 				}else{
 					next(null, false);
 				}
+				if(this.duration > 0 && this.AccessoryType == 0 && timing == true){
+					this.log("d 1");
+					setTimeout(function() {
+						self.setStatusToggle();
+					}, (this.duration*1000));
+				}
 			} else if (typeof jsonBody.toggle !== 'undefined') {
 				if(jsonBody.toggle == true){
 					this.log("t 1");
-					//this.functionService.setCharacteristic(Characteristic.On, true);
-					next(null, true);
+					this.functionService.setCharacteristic(Characteristic.On, true);
 				}else{
 					this.log("t 2");
-					//this.functionService.setCharacteristic(Characteristic.On, false);
-					next(null, false);
+					this.functionService.setCharacteristic(Characteristic.On, false);
 				}
 			// Light Bulb
 			} else if (typeof jsonBody.Brightness !== 'undefined') {
