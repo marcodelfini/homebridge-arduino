@@ -152,10 +152,10 @@ arduino.prototype.getServices = function () {
 		var functionService = new Service.HumiditySensor(this.Name);
 		functionService.getCharacteristic(Characteristic.CurrentRelativeHumidity)
 			.setProps({
-						minValue: 0,
-						maxValue: 100,
-						minStep: 0.001
-					})
+					minValue: 0,
+					maxValue: 100,
+					minStep: 0.001
+				})
 			.on("get", this.getHumidity.bind(this));
 	}else if(this.AccessoryType == 5){ // Fan
 		var functionService = new Service.Fan(this.Name);
@@ -193,19 +193,19 @@ arduino.prototype.getServices = function () {
 		var functionService = new Service.TemperatureSensor(this.Name);
 		functionService.getCharacteristic(Characteristic.CurrentTemperature)
 			.setProps({
-						minValue: -100,
-						maxValue: 100,
-						minStep: 0.001
-					})
+					minValue: -100,
+					maxValue: 100,
+					minStep: 0.001
+				})
 			.on("get", this.getTemperature.bind(this));
 	}else if(this.AccessoryType == 7){ // LightSensor (unit -> lux)
 		var functionService = new Service.LightSensor(this.Name);
 		functionService.getCharacteristic(Characteristic.CurrentAmbientLightLevel)
 			.setProps({
-						minValue: 0.0001,
-						maxValue: 100000,
-						minStep: 0.0001
-					})
+					minValue: 0.0001,
+					maxValue: 100000,
+					minStep: 0.0001
+				})
 			.on("get", this.getLight.bind(this));
 	}else if(this.AccessoryType == 8){ // LockMechanism
 		var functionService = new Service.LockMechanism(this.Name);
@@ -390,14 +390,6 @@ arduino.prototype._responseHandler = function (res, next) {
 						this.functionService.getCharacteristic(Characteristic.On).updateValue(false);
 						this.toggle = false;
 					}
-				}
-			} else if (typeof jsonBody.toggle !== 'undefined') {
-				if(jsonBody.toggle == true){
-					this.functionService.getCharacteristic(Characteristic.On).updateValue(true);
-					this.toggle = false;
-				}else{
-					this.functionService.getCharacteristic(Characteristic.On).updateValue(false);
-					this.toggle = false;
 				}
 			// Light Bulb
 			} else if (typeof jsonBody.Brightness !== 'undefined') {
