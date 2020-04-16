@@ -236,11 +236,11 @@ arduino.prototype.setStatus = function (newVal, next) {
 	const self = this;
 	this.log("change go");
 
-	if(this.duration > 0 && this.AccessoryType == 0){
+	if(this.duration > 0 && this.AccessoryType == 0 && typeof next === "function"){
 		this.log("d 1");
 		this._makeRequest((newVal ? "?enable" : "?disable") + "&auth=" + this.auth+"&uuid="+this.uuid, next);
 		setTimeout(function() {
-			self._makeRequest((newVal ? "?disable" : "?enable") + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+			self._makeRequest((newVal ? "?disable" : "?enable") + "&auth=" + this.auth+"&uuid="+this.uuid);
 		}, (this.duration*1000));
 	}else{
 		this._makeRequest((newVal ? "?enable" : "?disable") + "&auth=" + this.auth+"&uuid="+this.uuid, next);
