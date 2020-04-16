@@ -240,7 +240,7 @@ arduino.prototype.setStatus = function (newVal, next) {
 		this.log("d 1");
 		this._makeRequest((newVal ? "?enable" : "?disable") + "&auth=" + this.auth+"&uuid="+this.uuid, next);
 		setTimeout(function() {
-			this._makeRequest((newVal ? "?disable" : "?enable") + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+			self._makeRequest((newVal ? "?disable" : "?enable") + "&auth=" + this.auth+"&uuid="+this.uuid, next);
 		}, (this.duration*1000));
 	}else{
 		this._makeRequest((newVal ? "?enable" : "?disable") + "&auth=" + this.auth+"&uuid="+this.uuid, next);
@@ -358,7 +358,7 @@ arduino.prototype.setLockTargetState = function (newVal, next) {
 
 
 
-arduino.prototype._responseHandler = function (res, next, timing) {
+arduino.prototype._responseHandler = function (res, next) {
 	let body = "";
 
 	res.on("data", (data) => { body += data; });
@@ -469,13 +469,13 @@ arduino.prototype._responseHandler = function (res, next, timing) {
 	});
 };
 
-arduino.prototype._makeRequest = function (path, next, timing = false) {
+arduino.prototype._makeRequest = function (path, next) {
 	this.log(path);
 	let req = http.get({
 		host: this.host,
 		port: this.port,
 		path: (this.baseUrl == "" ? this.baseUrl+"/" : this.baseUrl) + path,
-	}, (res) => this._responseHandler(res, next, timing));
+	}, (res) => this._responseHandler(res, next));
 
 	req.on("error", (err) => {
 		if (this.logLevel >= 1) { this.log(err); }
