@@ -235,10 +235,11 @@ arduino.prototype.getStatus = function (next) {
 
 arduino.prototype.setStatus = function (newVal, next) {
 	const self = this;
-	
+	// Switch (becomes a button), Lightbulb
+	var AccessoryToggle = [0,1];
 	if(this.toggle == false){
 		this._makeRequest((newVal ? "?enable" : "?disable") + "&auth=" + this.auth+"&uuid="+this.uuid, next);
-		if(this.duration > 0 && this.AccessoryType == 0 && this.toggle == false){
+		if(this.duration > 0 && AccessoryToggle.includes(this.AccessoryType) == true && this.toggle == false){
 			setTimeout(function() {
 				self.setStatusToggle();
 			}, (this.duration*1000));

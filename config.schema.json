@@ -158,7 +158,7 @@
                 "placeholder": "0",
                 "default": 0,
                 "required": false,
-                "description": "Time in second (default is 0 not active): SWITCH: time to Toggle State."
+                "description": "Time in second (default is 0 not active): SWITCH: time to Toggle State (becomes a button)."
             },
             "logLevel": {
                 "title": "Loging level",
