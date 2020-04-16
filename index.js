@@ -29,7 +29,7 @@ function arduino(log, config) {
 	
 	this.uuid = UUIDGen.generate("uuid-hb-gen_"+this.Serial);
 	
-	this.toggle = flase;
+	this.toggle = false;
 	
 	/* AccessoryType
 	0: Switch
