@@ -233,8 +233,18 @@ arduino.prototype.getStatus = function (next) {
 };
 
 arduino.prototype.setStatus = function (newVal, next) {
+	const self = this;
 	this.log("change go");
-	this._makeRequest((newVal ? "?enable" : "?disable") + "&auth=" + this.auth+"&uuid="+this.uuid, next, true);
+
+	if(this.duration > 0 && this.AccessoryType == 0 && timing == true){
+		this.log("d 1");
+		this._makeRequest((newVal ? "?enable" : "?disable") + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+		setTimeout(function() {
+			this._makeRequest((newVal ? "?disable" : "?enable") + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+		}, (this.duration*1000));
+	}else{
+		this._makeRequest((newVal ? "?enable" : "?disable") + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+	}
 };
 
 arduino.prototype.setStatusToggle = function () {
@@ -349,7 +359,6 @@ arduino.prototype.setLockTargetState = function (newVal, next) {
 
 
 arduino.prototype._responseHandler = function (res, next, timing) {
-	const self = this;
 	let body = "";
 
 	res.on("data", (data) => { body += data; });
@@ -365,12 +374,6 @@ arduino.prototype._responseHandler = function (res, next, timing) {
 					next(null, true);
 				}else{
 					next(null, false);
-				}
-				if(this.duration > 0 && this.AccessoryType == 0 && timing == true){
-					this.log("d 1");
-					setTimeout(function() {
-						self.setStatusToggle();
-					}, (this.duration*1000));
 				}
 			} else if (typeof jsonBody.toggle !== 'undefined') {
 				if(jsonBody.toggle == true){
