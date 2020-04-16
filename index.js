@@ -380,9 +380,19 @@ arduino.prototype._responseHandler = function (res, next) {
 			// All
 			if (typeof jsonBody.status !== 'undefined') {
 				if (jsonBody.status == true){
-					next(null, true);
+					if(this.toggle == false){
+						next(null, true);
+					}else{
+						this.functionService.getCharacteristic(Characteristic.On).updateValue(true);
+						this.toggle = false;
+					}
 				}else{
-					next(null, false);
+					if(this.toggle == false){
+						next(null, false);
+					}else{
+						this.functionService.getCharacteristic(Characteristic.On).updateValue(false);
+						this.toggle = false;
+					}
 				}
 			} else if (typeof jsonBody.toggle !== 'undefined') {
 				if(jsonBody.toggle == true){
