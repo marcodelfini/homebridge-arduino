@@ -238,7 +238,6 @@ arduino.prototype.setStatus = function (newVal, next) {
 };
 
 arduino.prototype.setStatusToggle = function () {
-	clearTimeout(this.timer);
 	this.log("toggle go");
 	this._makeRequest("?toggle" + "&auth=" + this.auth+"&uuid="+this.uuid);
 };
@@ -363,10 +362,9 @@ arduino.prototype._responseHandler = function (res, next, timing) {
 			if (typeof jsonBody.status !== 'undefined') {
 				if(this.duration > 0 && this.AccessoryType == 0 && timing == true){
 					this.log("d 1");
-					clearTimeout(this.timer);
-					this.timer = setTimeout(function() {
+					setTimeout(function() {
 						this.setStatusToggle();
-					}.bind(this), (this.duration*1000));
+					}, (this.duration*1000));
 				}
 				if (jsonBody.status == true){
 					next(null, true);
@@ -374,7 +372,6 @@ arduino.prototype._responseHandler = function (res, next, timing) {
 					next(null, false);
 				}
 			} else if (typeof jsonBody.toggle !== 'undefined') {
-				clearTimeout(this.timer);
 				if(jsonBody.toggle == true){
 					this.log("t 1");
 					this.functionService.setCharacteristic(Characteristic.On, true);
