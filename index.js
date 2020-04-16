@@ -376,9 +376,11 @@ arduino.prototype._responseHandler = function (res, next, timing) {
 				if(jsonBody.toggle == true){
 					this.log("t 1");
 					this.functionService.setCharacteristic(Characteristic.On, true);
+					return;
 				}else{
 					this.log("t 2");
 					this.functionService.setCharacteristic(Characteristic.On, false);
+					return;
 				}
 			// Light Bulb
 			} else if (typeof jsonBody.Brightness !== 'undefined') {
