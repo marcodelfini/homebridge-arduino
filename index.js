@@ -236,25 +236,54 @@ arduino.prototype.getServices = function () {
 			.on("set", this.setTargetHeatingCoolingState.bind(this));
 		
 		functionService.getCharacteristic(Characteristic.CurrentTemperature)
-			.setProps({
-				minValue: 0,
-				maxValue: 100.4,
-				minStep: 0.1
-			})
 			.on("get", this.getCurrentTemperature.bind(this));
+			
+		if(this.optionalCharac1 == true){
+			functionService.getCharacteristic(Characteristic.CurrentTemperature)
+			.setProps({
+				format: Characteristic.Formats.FLOAT,
+				unit: Characteristic.Units.FAHRENHEIT,
+				minValue: 0,
+				maxValue: 122,
+				minStep: 0.1
+			});
+		}else{
+			functionService.getCharacteristic(Characteristic.CurrentTemperature)
+			.setProps({
+				format: Characteristic.Formats.FLOAT,
+				unit: Characteristic.Units.CELSIUS,
+				minValue: 0,
+				maxValue: 50,
+				minStep: 0.1
+			});
+		}
 		
 		functionService.getCharacteristic(Characteristic.TargetTemperature)
-			.setProps({
-				minValue: 10,
-				maxValue: 100.4,
-				minStep: 0.1
-			})
 			.on('get', this.getTargetTemperature.bind(this))
 			.on('set', this.setTargetTemperature.bind(this));
 		
-		functionService.getCharacteristic(Characteristic.TemperatureDisplayUnits) // // 0 CELSIUS, 1 FAHRENHEIT
-			.on("get", this.getTemperatureDisplayUnits.bind(this))
-			.on("set", this.setTemperatureDisplayUnits.bind(this));
+		if(this.optionalCharac1 == true){
+			functionService.getCharacteristic(Characteristic.TargetTemperature)
+			.setProps({
+				format: Characteristic.Formats.FLOAT,
+				unit: Characteristic.Units.FAHRENHEIT,
+				minValue: 50,
+				maxValue: 100.4,
+				minStep: 0.1
+			});
+		}else{
+			functionService.getCharacteristic(Characteristic.TargetTemperature)
+			.setProps({
+				format: Characteristic.Formats.FLOAT,
+				unit: Characteristic.Units.CELSIUS,
+				minValue: 10,
+				maxValue: 38,
+				minStep: 0.1
+			});
+		}
+		
+		functionService.getCharacteristic(Characteristic.TemperatureDisplayUnits) // 0 CELSIUS, 1 FAHRENHEIT
+			.on("get", this.getTemperatureDisplayUnits.bind(this));
 	}else{ // Switch (0)
 		var functionService = new Service.Switch(this.Name);
 		functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState);
@@ -429,11 +458,6 @@ arduino.prototype.getTemperatureDisplayUnits = function (next) {
 	this._makeRequest("?getTemperatureDisplayUnits" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
 };
 
-arduino.prototype.setTemperatureDisplayUnits = function (newVal, next) {
-	// 0 CELSIUS, 1 FAHRENHEIT
-	this._makeRequest("?setTemperatureDisplayUnits=" + newVal + "&auth=" + this.auth+"&uuid="+this.uuid, next);
-};
-
 
 arduino.prototype._responseHandler = function (res, next) {
 	let body = "";
@@ -545,8 +569,6 @@ arduino.prototype._responseHandler = function (res, next) {
 			} else if (typeof jsonBody.TargetTemperature !== 'undefined') {
 				next(null, jsonBody.TargetTemperature);
 			} else if (typeof jsonBody.TemperatureDisplayUnits !== 'undefined') {
-				this.functionService.getCharacteristic(Characteristic.CurrentTemperature).updateValue(jsonBody.CT);
-				this.functionService.setCharacteristic(Characteristic.TargetTemperature, jsonBody.TT);
 				next(null, jsonBody.TemperatureDisplayUnits);
 			// Error
 			} else {
