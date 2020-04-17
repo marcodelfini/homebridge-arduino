@@ -235,7 +235,7 @@ arduino.prototype.getServices = function () {
 			.on("get", this.getTargetHeatingCoolingState.bind(this))
 			.on("set", this.setTargetHeatingCoolingState.bind(this));
 		
-		functionService.getCharacteristic(Characteristic.CurrentTemperature) // unit -> Celsius
+		functionService.getCharacteristic(Characteristic.CurrentTemperature)
 			.setProps({
 				minValue: 0,
 				maxValue: 100.4,
@@ -243,7 +243,7 @@ arduino.prototype.getServices = function () {
 			})
 			.on("get", this.getCurrentTemperature.bind(this));
 		
-		functionService.getCharacteristic(Characteristic.TargetTemperature) // unit -> Celsius
+		functionService.getCharacteristic(Characteristic.TargetTemperature)
 			.setProps({
 				minValue: 10,
 				maxValue: 100.4,
@@ -545,6 +545,8 @@ arduino.prototype._responseHandler = function (res, next) {
 			} else if (typeof jsonBody.TargetTemperature !== 'undefined') {
 				next(null, jsonBody.TargetTemperature);
 			} else if (typeof jsonBody.TemperatureDisplayUnits !== 'undefined') {
+				this.functionService.setCharacteristic(Characteristic.CurrentTemperature, jsonBody.CT);
+				this.functionService.setCharacteristic(Characteristic.TargetTemperature, jsonBody.TT);
 				next(null, jsonBody.TemperatureDisplayUnits);
 			// Error
 			} else {
