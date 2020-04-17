@@ -582,7 +582,9 @@ arduino.prototype._responseHandler = function (res, next) {
 			} else if (typeof jsonBody.TargetTemperature !== 'undefined') {
 				next(null, jsonBody.TargetTemperature);
 			} else if (typeof jsonBody.TemperatureDisplayUnits !== 'undefined') {
-				next(null, jsonBody.TemperatureDisplayUnits);
+				if (typeof jsonBody.next !== 'function') {
+					next(null, jsonBody.TemperatureDisplayUnits);
+				}
 			// Error
 			} else {
 				this.log("nothing body: "+body);
