@@ -282,9 +282,6 @@ arduino.prototype.getServices = function () {
 			});
 		}
 		
-		functionService.setCharacteristic(Characteristic.TemperatureDisplayUnits) // 0 CELSIUS, 1 FAHRENHEIT
-			.on("get", this.getTemperatureDisplayUnits.bind(this));
-		
 		functionService.setCharacteristic(Characteristic.TemperatureDisplayUnits, (this.optionalCharac1 == false ? Characteristic.TemperatureDisplayUnits.CELSIUS : Characteristic.TemperatureDisplayUnits.FAHRENHEIT));
 	}else{ // Switch (0)
 		var functionService = new Service.Switch(this.Name);
