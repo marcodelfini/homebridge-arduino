@@ -281,6 +281,17 @@ arduino.prototype.getServices = function () {
 				minStep: 0.1
 			});
 		}
+
+		if(this.optionalCharac1 == false){
+			functionService.setCharacteristic(Characteristic.TemperatureDisplayUnits, Characteristic.TemperatureDisplayUnits.CELSIUS);
+			this.setTemperatureDisplayUnits(Characteristic.TemperatureDisplayUnits.CELSIUS);
+		}else{
+			functionService.setCharacteristic(Characteristic.TemperatureDisplayUnits, Characteristic.TemperatureDisplayUnits.FAHRENHEIT);
+			this.setTemperatureDisplayUnits(Characteristic.TemperatureDisplayUnits.FAHRENHEIT);
+		}
+		
+		functionService.setCharacteristic(Characteristic.TemperatureDisplayUnits) // 0 CELSIUS, 1 FAHRENHEIT
+			.on("get", this.getTemperatureDisplayUnits.bind(this));
 	}else{ // Switch (0)
 		var functionService = new Service.Switch(this.Name);
 		functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState);
@@ -455,6 +466,11 @@ arduino.prototype.getTemperatureDisplayUnits = function (next) {
 	this._makeRequest("?getTemperatureDisplayUnits" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
 };
 
+arduino.prototype.setTemperatureDisplayUnits = function (newVal) {
+	// 0 CELSIUS, 1 FAHRENHEIT
+	this._makeRequest("?setTemperatureDisplayUnits=" + newVal + "&auth=" + this.auth+"&uuid="+this.uuid, null);
+};
+
 
 arduino.prototype._responseHandler = function (res, next) {
 	let body = "";
@@ -565,6 +581,8 @@ arduino.prototype._responseHandler = function (res, next) {
 				next(null, jsonBody.CurrentTemperature);
 			} else if (typeof jsonBody.TargetTemperature !== 'undefined') {
 				next(null, jsonBody.TargetTemperature);
+			} else if (typeof jsonBody.TemperatureDisplayUnits !== 'undefined') {
+				next(null, jsonBody.TemperatureDisplayUnits);
 			// Error
 			} else {
 				this.log("nothing body: "+body);
