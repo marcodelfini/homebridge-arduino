@@ -416,12 +416,12 @@ arduino.prototype.getCurrentTemperature = function (next) {
 
 arduino.prototype.getTargetTemperature = function (next) {
 	// unit -> Celsius
-	this._makeRequest("?getTargetHeatingCoolingState" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+	this._makeRequest("?getTargetTemperature" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
 };
 
 arduino.prototype.setTargetTemperature = function (newVal, next) {
 	// unit -> Celsius
-	this._makeRequest("?setTargetHeatingCoolingState=" + newVal + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+	this._makeRequest("?setTargetTemperature=" + newVal + "&auth=" + this.auth+"&uuid="+this.uuid, next);
 };
 
 arduino.prototype.getTemperatureDisplayUnits = function (next) {
