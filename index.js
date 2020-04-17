@@ -592,7 +592,9 @@ arduino.prototype._responseHandler = function (res, next) {
 			}
 		} catch (e) {
 			if (this.logLevel >= 1) { this.log(e); }
-			next(e);
+			if (typeof jsonBody.next === 'function') {
+				next(e);
+			}
 		}
 	});
 };
