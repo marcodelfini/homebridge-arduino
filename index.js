@@ -1,5 +1,6 @@
 var Service, Characteristic, DoorState, UUIDGen;
 var http = require("http");
+var mysql = require('mysql');
 
 
 function arduino(log, config) {
@@ -7,6 +8,13 @@ function arduino(log, config) {
 	  return;
 	}
 	this.log = log;
+	
+	// logLevel 0: disabled, 1: error, 2: info
+	if (typeof config["logLevel"] === "undefined") {
+		this.logLevel = 1;
+	} else {
+		this.logLevel = config["logLevel"];
+	}
 
 	this.Manufacturer = config["manufacturer"] || "My manufacturer";
 	this.Model = config["model"] || "My model";
@@ -33,6 +41,21 @@ function arduino(log, config) {
 	
 	this.toggle = false;
 	
+	this.con = mysql.createConnection({
+		host: config['mysql_host'] || "127.0.0.1",
+		port : config['mysql_port'] || 3306,
+		user: config['mysql_user'] || "root",
+		password: config['mysql_pwd'] || "root",
+		database: config['mysql_db'] || "homekit"
+	});
+	
+	this.con.connect(function(err) {
+		if (err){
+			this.log(err);
+			return;
+		}
+	});
+	
 	/* AccessoryType
 	0	Switch
 	1	Lightbulb
@@ -51,13 +74,6 @@ function arduino(log, config) {
 		this.AccessoryType = 0;
 	} else {
 		this.AccessoryType = config["accessory-type"];
-	}
-
-	// logLevel 0: disabled, 1: error, 2: info
-	if (typeof config["logLevel"] === "undefined") {
-		this.logLevel = 1;
-	} else {
-		this.logLevel = config["logLevel"];
 	}
 }
 
@@ -613,6 +629,12 @@ arduino.prototype._makeRequest = function (path, next) {
 		if (this.logLevel >= 1) { this.log(err); }
 	});
 };
+
+arduino.prototype.storeMySQL = function(that, sql) {
+	that.con.query(sql, function (err, result) {
+		if (err) throw err; 
+	});
+}
 
 module.exports = function (hb) {
 	Service = hb.hap.Service;
