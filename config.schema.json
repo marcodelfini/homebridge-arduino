@@ -98,7 +98,7 @@
                     }
                 ],
                 "required": true,
-                "description": "Three different types of Accessory: 0 Switch (default), 1 Lightbulb, 2 Outlet, 3 GarageDoorOpener, 4 Realy, 5 Fan, 6 TemperatureSensor."
+                "description": "Types of Accessory: 0 Switch (default), 1 Lightbulb, 2 Outlet, 3 GarageDoorOpener, 4 Realy, 5 Fan, 6 TemperatureSensor, 7 Light Sensor, 8 Lock Mechanism, 9 Motion Sensor, 10 Leak Sensor, 11 Thermostat."
             },
             "optional-charac1": {
                 "title": "Optional Characteristics 1",
