@@ -236,19 +236,19 @@ arduino.prototype.getServices = function () {
 			.on("set", this.setTargetHeatingCoolingState.bind(this));
 		
 		functionService.getCharacteristic(Characteristic.CurrentTemperature) // unit -> Celsius
-			.setProps({
+			/*.setProps({
 				minValue: 0,
 				maxValue: 100,
 				minStep: 0.1
-			})
+			})*/
 			.on("get", this.getCurrentTemperature.bind(this));
 		
 		functionService.getCharacteristic(Characteristic.TargetTemperature) // unit -> Celsius
-			.setProps({
+			/*.setProps({
 				minValue: 10,
 				maxValue: 38,
 				minStep: 0.1
-			})
+			})*/
 			.on('get', this.getTargetTemperature.bind(this))
 			.on('set', this.setTargetTemperature.bind(this));
 		
