@@ -173,36 +173,6 @@
                 "default": false,
                 "description": "Default State (begin state, or return state if duration is setted)."
             },
-            "mysql_host": {
-                "title": "MySQL host",
-                "type": "string",
-                "placeholder": "",
-                "default": ""
-            },
-            "mysql_port": {
-                "title": "MySQL port",
-                "type": "integer",
-                "placeholder": 3306,
-                "default": 3306
-            },
-            "mysql_user": {
-                "title": "MySQL user",
-                "type": "string",
-                "placeholder": "root",
-                "default": "root"
-            },
-            "mysql_pwd": {
-                "title": "MySQL password",
-                "type": "string",
-                "placeholder": "root",
-                "default": "root"
-            },
-            "mysql_db": {
-                "title": "MySQL database",
-                "type": "string",
-                "placeholder": "homekit",
-                "default": "homekit"
-            },
             "logLevel": {
                 "title": "Loging level",
                 "type": "integer",
