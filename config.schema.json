@@ -89,6 +89,12 @@
                         "enum": [
                             10
                         ]
+                    },
+                    {
+                        "title": "Thermostat (11)",
+                        "enum": [
+                            11
+                        ]
                     }
                 ],
                 "required": true,

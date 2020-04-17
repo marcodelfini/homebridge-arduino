@@ -34,15 +34,18 @@ function arduino(log, config) {
 	this.toggle = false;
 	
 	/* AccessoryType
-	0: Switch
-	1: Lightbulb
-	2: Outlet
-	3: GarageDoorOpener
-	4: HumiditySensor
-	5: Fan
-	6: TemperatureSensor
-	7: LightSensor
-	8: LockMechanism
+	0	Switch
+	1	Lightbulb
+	2	Outlet
+	3	GarageDoorOpener
+	4	HumiditySensor
+	5	Fan
+	6	TemperatureSensor
+	7	LightSensor
+	8	LockMechanism
+	9	MotionSensor
+	10	LeakSensor
+	11	Thermostat
 	*/
 	if (typeof config["accessory-type"] === "undefined") {
 		this.AccessoryType = 0;
@@ -223,6 +226,35 @@ arduino.prototype.getServices = function () {
 		var functionService = new Service.LeakSensor(this.Name);
 		functionService.getCharacteristic(Characteristic.LeakDetected)
 			.on("get", this.getStatus.bind(this));
+	}else if(this.AccessoryType == 11){ // Thermostat
+		var functionService = new Service.Thermostat(this.Name);
+		functionService.getCharacteristic(Characteristic.CurrentHeatingCoolingState) // 0 OFF, 1 HEAT, 2 COOL
+			.on("get", this.getCurrentHeatingCoolingState.bind(this));
+		
+		functionService.getCharacteristic(Characteristic.TargetHeatingCoolingState) // 0 OFF, 1 HEAT, 2 COOL, 3 AUTO
+			.on("get", this.getTargetHeatingCoolingState.bind(this))
+			.on("set", this.setTargetHeatingCoolingState.bind(this));
+		
+		functionService.getCharacteristic(Characteristic.CurrentTemperature) // unit -> Celsius
+			.setProps({
+				minValue: 0,
+				maxValue: 100,
+				minStep: 0.1
+			})
+			.on("get", this.getCurrentTemperature.bind(this));
+		
+		functionService.getCharacteristic(Characteristic.TargetTemperature) // unit -> Celsius
+			.setProps({
+				minValue: 10,
+				maxValue: 38,
+				minStep: 0.1
+			})
+			.on('get', this.getTargetTemperature.bind(this))
+			.on('set', this.setTargetTemperature.bind(this));
+		
+		functionService.getCharacteristic(Characteristic.TemperatureDisplayUnits) // // 0 CELSIUS, 1 FAHRENHEIT
+			.on("get", this.getTemperatureDisplayUnits.bind(this))
+			.on("set", this.setTemperatureDisplayUnits.bind(this));
 	}else{ // Switch (0)
 		var functionService = new Service.Switch(this.Name);
 		functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState);
@@ -361,7 +393,46 @@ arduino.prototype.setLockTargetState = function (newVal, next) {
 	}
 };
 
+// Thermostat
+arduino.prototype.getCurrentHeatingCoolingState = function (next) {
+	// 0 OFF, 1 HEAT, 2 COOL
+	this._makeRequest("?getCurrentHeatingCoolingState" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+};
 
+arduino.prototype.getTargetHeatingCoolingState = function (next) {
+	// 0 OFF, 1 HEAT, 2 COOL, 3 AUTO
+	this._makeRequest("?getTargetHeatingCoolingState" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+};
+
+arduino.prototype.setTargetHeatingCoolingState = function (newVal, next) {
+	// 0 OFF, 1 HEAT, 2 COOL, 3 AUTO
+	this._makeRequest("?setTargetHeatingCoolingState=" + newVal + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+};
+
+arduino.prototype.getCurrentTemperature = function (next) {
+	// unit -> Celasius
+	this._makeRequest("?getCurrentTemperature" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+};
+
+arduino.prototype.getTargetTemperature = function (next) {
+	// unit -> Celsius
+	this._makeRequest("?getTargetHeatingCoolingState" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+};
+
+arduino.prototype.setTargetTemperature = function (newVal, next) {
+	// unit -> Celsius
+	this._makeRequest("?setTargetHeatingCoolingState=" + newVal + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+};
+
+arduino.prototype.getTemperatureDisplayUnits = function (next) {
+	// 0 CELSIUS, 1 FAHRENHEIT
+	this._makeRequest("?getTemperatureDisplayUnits" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+};
+
+arduino.prototype.setTemperatureDisplayUnits = function (newVal, next) {
+	// 0 CELSIUS, 1 FAHRENHEIT
+	this._makeRequest("?setTemperatureDisplayUnits=" + newVal + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+};
 
 
 arduino.prototype._responseHandler = function (res, next) {
@@ -464,6 +535,18 @@ arduino.prototype._responseHandler = function (res, next) {
 					this.functionService.setCharacteristic(Characteristic.LockCurrentState, Characteristic.LockCurrentState.SECURED);
 					next(null, Characteristic.LockTargetState.SECURED);
 				}
+			// Thermostat
+			} else if (typeof jsonBody.CurrentHeatingCoolingState !== 'undefined') {
+				next(null, jsonBody.CurrentHeatingCoolingState);
+			} else if (typeof jsonBody.TargetHeatingCoolingState !== 'undefined') {
+				next(null, jsonBody.TargetHeatingCoolingState);
+			} else if (typeof jsonBody.CurrentTemperature !== 'undefined') {
+				next(null, jsonBody.CurrentTemperature);
+			} else if (typeof jsonBody.TargetTemperature !== 'undefined') {
+				next(null, jsonBody.TargetTemperature);
+			} else if (typeof jsonBody.TemperatureDisplayUnits !== 'undefined') {
+				next(null, jsonBody.TemperatureDisplayUnits);
+			// Error
 			} else {
 				this.log("nothing body: "+body);
 				next({});
@@ -476,7 +559,7 @@ arduino.prototype._responseHandler = function (res, next) {
 };
 
 arduino.prototype._makeRequest = function (path, next) {
-	this.log(path);
+	if (this.logLevel >= 2) { this.log("PATH: " + path); }
 	let req = http.get({
 		host: this.host,
 		port: this.port,
