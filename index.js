@@ -545,8 +545,8 @@ arduino.prototype._responseHandler = function (res, next) {
 			} else if (typeof jsonBody.TargetTemperature !== 'undefined') {
 				next(null, jsonBody.TargetTemperature);
 			} else if (typeof jsonBody.TemperatureDisplayUnits !== 'undefined') {
-				this.functionService.setCharacteristic(Characteristic.CurrentTemperature, jsonBody.CT);
-				this.functionService.setCharacteristic(Characteristic.TargetTemperature, jsonBody.TT);
+				this.functionService.getCharacteristic(Characteristic.CurrentTemperature).updateValue(jsonBody.CT);
+				this.functionService.getCharacteristic(Characteristic.TargetTemperature).updateValue(jsonBody.TT);
 				next(null, jsonBody.TemperatureDisplayUnits);
 			// Error
 			} else {
