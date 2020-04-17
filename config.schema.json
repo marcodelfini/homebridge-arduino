@@ -105,7 +105,7 @@
                 "type": "boolean",
                 "default": false,
                 "required": false,
-                "description": "Optional Characteristics 1: LIGHTBULB: Brightness, FAN: RotationDirection, THERMOSTAT: Celsius Deactive, Fahrenheit Active."
+                "description": "Optional Characteristics 1: LIGHTBULB: Brightness, FAN: RotationDirection, THERMOSTAT: Celsius Deactive (default), Fahrenheit Active."
             },
             "optional-charac2": {
                 "title": "Optional Characteristics 2",
