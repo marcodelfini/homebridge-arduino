@@ -596,7 +596,7 @@ arduino.prototype._responseHandler = function (res, next) {
 			}
 		} catch (e) {
 			if (this.logLevel >= 1) { this.log(e); }
-			if (typeof jsonBody.next === 'function') {
+			if (typeof next === 'function') {
 				next(e);
 			}
 		}
