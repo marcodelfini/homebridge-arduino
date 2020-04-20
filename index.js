@@ -769,7 +769,7 @@ arduino.prototype.removeAccessory = function() {
 }
 
 module.exports = function (hb) {
-	this.log("homebridge API version: " + hb.version);
+	console.log("homebridge API version: " + hb.version);
 	Accessory = hb.platformAccessory;
 	Service = hb.hap.Service;
 	Characteristic = hb.hap.Characteristic;
