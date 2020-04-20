@@ -34,6 +34,8 @@ function arduino(log, config) {
 	} else {
 		this.AccessoryType = config["accessory-type"];
 	}
+	
+	this.log(config["language"]);
 
 	this.Manufacturer = config["manufacturer"] || "My manufacturer";
 	this.Model = config["model"] || "My model";
