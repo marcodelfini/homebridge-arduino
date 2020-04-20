@@ -1,4 +1,4 @@
-var Service, Characteristic, DoorState, UUIDGen;
+var Accessory, Service, Characteristic, DoorState, UUIDGen;
 var http = require("http");
 
 
@@ -7,6 +7,7 @@ function arduino(log, config) {
 	  return;
 	}
 	this.log = log;
+	this.accessories = [];
 	
 	// logLevel 0: disabled, 1: error, 2: info
 	if (typeof config["logLevel"] === "undefined") {
@@ -22,23 +23,41 @@ function arduino(log, config) {
 	this.HardwareRevision = config["hardware-revision"] || "1";
 	this.Name = config["name"] || "Arduino";
 
-	this.auth = config["auth"] || "";
-	this.host = config["host"] || "127.0.0.1";
-	this.port = config["port"] || 80;
-	this.baseUrl = config["base-url"] || "/";
-	
-	this.optionalCharac1 = config["optional-charac1"] || false;
-	this.optionalCharac2 = config["optional-charac2"] || false;
-	this.optionalCharac3 = config["optional-charac3"] || false;
-	this.optionalCharac4 = config["optional-charac4"] || false;
-	
-	this.duration = parseInt(config["duration"]) || 0;
-	
-	this.defaultState = config["default-state"] || 0;
-	
-	this.uuid = UUIDGen.generate("uuid-hb-gen_"+this.Serial);
-	
-	this.toggle = false;
+	this.requestServer = http.createServer(function(request, response) {
+		if (request.url === "/add") {
+			this.addAccessory(new Date().toISOString());
+			response.writeHead(204);
+			response.end();
+		}
+
+		if (request.url == "/reachability") {
+			this.updateAccessoriesReachability();
+			response.writeHead(204);
+			response.end();
+		}
+
+		if (request.url == "/remove") {
+			this.removeAccessory();
+			response.writeHead(204);
+			response.end();
+		}
+	}.bind(this));
+
+	this.requestServer.listen(18081, function() {
+		platform.log("Server Listening...");
+	});
+
+	if (api) {
+		// Save the API object as plugin needs to register new accessory via this object
+		this.api = api;
+
+		// Listen to event "didFinishLaunching", this means homebridge already finished loading cached accessories.
+		// Platform Plugin should only register new accessory that doesn't exist in homebridge after this event.
+		// Or start discover new accessories.
+		this.api.on('didFinishLaunching', function() {
+			platform.log("DidFinishLaunching");
+		}.bind(this));
+	}
 	
 	/* AccessoryType
 	0	Switch
@@ -54,11 +73,102 @@ function arduino(log, config) {
 	10	LeakSensor
 	11	Thermostat
 	*/
-	if (typeof config["accessory-type"] === "undefined") {
-		this.AccessoryType = 0;
-	} else {
-		this.AccessoryType = config["accessory-type"];
+	this.AccessoryType = config["accessory-type"] || 0;
+
+	/*this.auth = config["auth"] || "";
+	this.host = config["host"] || "127.0.0.1";
+	this.port = config["port"] || 80;
+	this.baseUrl = config["base-url"] || "/";
+	
+	this.optionalCharac1 = config["optional-charac1"] || false;
+	this.optionalCharac2 = config["optional-charac2"] || false;
+	this.optionalCharac3 = config["optional-charac3"] || false;
+	this.optionalCharac4 = config["optional-charac4"] || false;
+	
+	this.duration = parseInt(config["duration"]) || 0;
+	
+	this.defaultState = config["default-state"] || 0;
+	
+	this.uuid = UUIDGen.generate("uuid-hb-gen_"+this.Serial);
+	
+	this.toggle = false;*/
+}
+
+// Function invoked when homebridge tries to restore cached accessory.
+// Developer can configure accessory at here (like setup event handler).
+// Update current value.
+SamplePlatform.prototype.configureAccessory = function(accessory) {
+  this.log(accessory.displayName, "Configure Accessory");
+  var platform = this;
+
+  // Set the accessory to reachable if plugin can currently process the accessory,
+  // otherwise set to false and update the reachability later by invoking 
+  // accessory.updateReachability()
+  accessory.reachable = true;
+
+  accessory.on('identify', function(paired, callback) {
+    platform.log(accessory.displayName, "Identify!!!");
+    callback();
+  });
+
+  if (accessory.getService(Service.Lightbulb)) {
+    accessory.getService(Service.Lightbulb)
+    .getCharacteristic(Characteristic.On)
+    .on('set', function(value, callback) {
+      platform.log(accessory.displayName, "Light -> " + value);
+      callback();
+    });
+  }
+
+  this.accessories.push(accessory);
+}
+
+// Handler will be invoked when user try to config your plugin.
+// Callback can be cached and invoke when necessary.
+SamplePlatform.prototype.configurationRequestHandler = function(context, request, callback) {
+	this.log("Context: ", JSON.stringify(context));
+	this.log("Request: ", JSON.stringify(request));
+
+	// Check the request response
+	if (request && request.response && request.response.inputs && request.response.inputs.name) {
+		this.addAccessory(request.response.inputs.name);
+
+		// Invoke callback with config will let homebridge save the new config into config.json
+		// Callback = function(response, type, replace, config)
+		// set "type" to platform if the plugin is trying to modify platforms section
+		// set "replace" to true will let homebridge replace existing config in config.json
+		// "config" is the data platform trying to save
+		callback(null, "platform", true, {"platform":"SamplePlatform", "otherConfig":"SomeData"});
+		return;
 	}
+
+	// - UI Type: Input
+	// Can be used to request input from user
+	// User response can be retrieved from request.response.inputs next time
+	// when configurationRequestHandler being invoked
+	var respDict = {
+		"type": "Interface",
+		"interface": "input",
+		"title": "Add Accessory",
+		"items": [
+			{
+				"id": "name",
+				"title": "Name",
+				"placeholder": "Fancy Light"
+			},
+			{
+				"id": "pw",
+				"title": "Password",
+				"secure": true
+			}
+		]
+	}
+
+  // Plugin can set context to allow it track setup process
+  context.ts = "Hello";
+
+  // Invoke callback to update setup UI
+  callback(respDict);
 }
 
 arduino.prototype.getServices = function () {	
@@ -67,7 +177,7 @@ arduino.prototype.getServices = function () {
 		.setCharacteristic(Characteristic.Model, this.Model)
 		.setCharacteristic(Characteristic.SerialNumber, this.Serial)
 		.setCharacteristic(Characteristic.FirmwareRevision, this.FirmwareRevision)
-        .setCharacteristic(Characteristic.HardwareRevision, this.HardwareRevision);
+		.setCharacteristic(Characteristic.HardwareRevision, this.HardwareRevision);
 	
 	if(this.AccessoryType == 1){ // Lightbulb
 		var functionService = new Service.Lightbulb(this.Name);
@@ -614,11 +724,57 @@ arduino.prototype._makeRequest = function (path, next) {
 	});
 };
 
+// Sample function to show how developer can add accessory dynamically from outside event
+SamplePlatform.prototype.addAccessory = function(accessoryName) {
+	this.log("Add Accessory");
+	var platform = this;
+	var uuid;
+
+	uuid = UUIDGen.generate(accessoryName);
+
+	var newAccessory = new Accessory(accessoryName, uuid);
+	newAccessory.on('identify', function(paired, callback) {
+		platform.log(newAccessory.displayName, "Identify!!!");
+		callback();
+	});
+	// Plugin can save context on accessory to help restore accessory in configureAccessory()
+	// newAccessory.context.something = "Something"
+
+	// Make sure you provided a name for service, otherwise it may not visible in some HomeKit apps
+	newAccessory.addService(Service.Lightbulb, "Test Light")
+	.getCharacteristic(Characteristic.On)
+	.on('set', function(value, callback) {
+	platform.log(newAccessory.displayName, "Light -> " + value);
+		callback();
+	});
+
+	this.accessories.push(newAccessory);
+	this.api.registerPlatformAccessories("homebridge-samplePlatform", "SamplePlatform", [newAccessory]);
+}
+
+SamplePlatform.prototype.updateAccessoriesReachability = function() {
+	this.log("Update Reachability");
+	for (var index in this.accessories) {
+		var accessory = this.accessories[index];
+		accessory.updateReachability(false);
+	}
+}
+
+// Sample function to show how developer can remove accessory dynamically from outside event
+SamplePlatform.prototype.removeAccessory = function() {
+	this.log("Remove Accessory");
+	this.api.unregisterPlatformAccessories("homebridge-samplePlatform", "SamplePlatform", this.accessories);
+
+	this.accessories = [];
+}
+
 module.exports = function (hb) {
+	this.log("homebridge API version: " + hb.version);
+	Accessory = hb.platformAccessory;
 	Service = hb.hap.Service;
 	Characteristic = hb.hap.Characteristic;
 	UUIDGen = hb.hap.uuid;
 	DoorState = hb.hap.Characteristic.CurrentDoorState;
 	
-	hb.registerAccessory("homebridge-arduino", "Arduino", arduino);
+	hb.registerPlatform("homebridge-arduino", "Arduino", arduino, true);
 };
