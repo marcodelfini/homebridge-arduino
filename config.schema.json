@@ -1,222 +1,40 @@
 {
-    "pluginAlias": "Arduino",
-    "pluginType": "platform",
-    "schema": {
-        "type": "object",
-        "properties": {
-            "name": {
-                "title": "Name",
-                "type": "string",
-                "required": true,
-                "default": "Arduino",
-                "description": "A unique name for the accessory. It will be used as theplatform name in HomeKit."
-            },
-            "serial-number": {
-                "title": "Serial Number",
-                "type": "string",
-                "required": true,
-                "default": "123-456-789",
-                "description": "A unique Serial Number."
-            },
-			"Accessory":{
-	            "name": {
-	                "title": "Name",
-	                "type": "string",
-	                "required": true,
-	                "default": "Arduino",
-	                "description": "A unique name for the accessory. It will be used as the accessory name in HomeKit."
-	            },
-	            "ID": {
-	                "title": "Name",
-	                "type": "string",
-	                "required": true,
-	                "default": "Arduino",
-	                "description": "A unique ID for the accessory."
-	            },
-	            "accessory-type": {
-	                "title": "Accessory Type",
-	                "type": "integer",
-	                "placeholder": "0",
-	                "default": 0,
-	                "oneOf": [
-	                    {
-	                        "title": "Switch (0)",
-	                        "enum": [
-	                            0
-	                        ]
-	                    },
-	                    {
-	                        "title": "Lightbulb (1)",
-	                        "enum": [
-	                            1
-	                        ]
-	                    },
-	                    {
-	                        "title": "Outlet (2)",
-	                        "enum": [
-	                            2
-	                        ]
-	                    },
-	                    {
-	                        "title": "Garage Door Opener (3)",
-	                        "enum": [
-	                            3
-	                        ]
-	                    },
-	                    {
-	                        "title": "Humidity Sensor (4)",
-	                        "enum": [
-	                            4
-	                        ]
-	                    },
-	                    {
-	                        "title": "Fan (5)",
-	                        "enum": [
-	                            5
-	                        ]
-	                    },
-	                    {
-	                        "title": "Temperature Sensor (6)",
-	                        "enum": [
-	                            6
-	                        ]
-	                    },
-	                    {
-	                        "title": "Light Sensor (7)",
-	                        "enum": [
-	                            7
-	                        ]
-	                    },
-	                    {
-	                        "title": "Lock Mechanism (8)",
-	                        "enum": [
-	                            8
-	                        ]
-	                    },
-	                    {
-	                        "title": "Motion Sensor (9)",
-	                        "enum": [
-	                            9
-	                        ]
-	                    },
-	                    {
-	                        "title": "Leak Sensor (10)",
-	                        "enum": [
-	                            10
-	                        ]
-	                    },
-	                    {
-	                        "title": "Thermostat (11)",
-	                        "enum": [
-	                            11
-	                        ]
-	                    }
-	                ],
-	                "required": true,
-	                "description": "Types of Accessory: 0 Switch (default), 1 Lightbulb, 2 Outlet, 3 GarageDoorOpener, 4 Realy, 5 Fan, 6 TemperatureSensor, 7 Light Sensor, 8 Lock Mechanism, 9 Motion Sensor, 10 Leak Sensor, 11 Thermostat."
-	            },
-	            "optional-charac1": {
-	                "title": "Optional Characteristics 1",
-	                "type": "boolean",
-	                "default": false,
-	                "required": false,
-	                "description": "Optional Characteristics 1: LIGHTBULB: Brightness, FAN: RotationDirection, THERMOSTAT: Celsius Deactive (default), Fahrenheit Active."
-	            },
-	            "optional-charac2": {
-	                "title": "Optional Characteristics 2",
-	                "type": "boolean",
-	                "default": false,
-	                "required": false,
-	                "description": "Optional Characteristics 2: LIGHTBULB: Hue, FAN: RotationSpeed."
-	            },
-	            "optional-charac3": {
-	                "title": "Optional Characteristics 3",
-	                "type": "boolean",
-	                "default": false,
-	                "required": false,
-	                "description": "Optional Characteristics 3: LIGHTBULB: Saturation."
-	            },
-	            "optional-charac4": {
-	                "title": "Optional Characteristics 4",
-	                "type": "boolean",
-	                "default": false,
-	                "required": false,
-	                "description": "Optional Characteristics 4: LIGHTBULB: ColorTemperature."
-	            },
-	            "auth": {
-	                "title": "Auth Token",
-	                "type": "string",
-	                "required": false,
-	                "description": "Auth token."
-	            },
-	            "host": {
-	                "title": "Host",
-	                "type": "string",
-	                "placeholder": "127.0.0.1",
-	                "default": "127.0.0.1",
-	                "required": false,
-	                "description": "Arduino host, default is 127.0.0.1 (NO add http:// before, only the ip or domain name)."
-	            },
-	            "base-url": {
-	                "title": "Base Url",
-	                "type": "string",
-	                "placeholder": "/",
-	                "default": "/",
-	                "required": false,
-	                "description": "Base URL, default is / (Example: \"/data/index.php\")."
-	            },
-	            "port": {
-	                "title": "Port",
-	                "type": "integer",
-	                "placeholder": "80",
-	                "default": 80,
-	                "required": false,
-	                "description": "Arduino Web port, default is 80."
-	            },
-	            "duration": {
-	                "title": "Duration",
-	                "type": "integer",
-	                "placeholder": "0",
-	                "default": 0,
-	                "required": false,
-	                "description": "Time in second (default is 0 not active): SWITCH: time to Toggle State (becomes a button)."
-	            },
-	            "default-state": {
-	                "title": "Default State",
-	                "type": "boolean",
-	                "placeholder": false,
-	                "default": false,
-	                "description": "Default State (begin state, or return state if duration is setted)."
-	            }
+	"pluginAlias": "sss-platform",
+	"pluginType": "platform",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"name": {
+				"title": "Name",
+				"type": "string",
+				"required": true,
+				"default": "Synology Camera System"
 			},
-            "logLevel": {
-                "title": "Loging level",
-                "type": "integer",
-                "placeholder": "1",
-                "default": 1,
-                "oneOf": [
-                    {
-                        "title": "Off (0)",
-                        "enum": [
-                            0
-                        ]
-                    },
-                    {
-                        "title": "Error (1)",
-                        "enum": [
-                            1
-                        ]
-                    },
-                    {
-                        "title": "Info (2)",
-                        "enum": [
-                            2
-                        ]
-                    }
-                ],
-                "required": false,
-                "description": "Three different levels: 0: logging disabled, 1: logs only HTTP errors (default), 2: logs each HTTP response."
+			"port": {
+				"title": "TCPIP-Port",
+				"type": "integer",
+				"required": true,
+				"default": 8888,
+        		"maximum": 65535
+			},
+			"timeout": {
+				"title": "Timeout",
+				"type": "integer",
+				"required": true,
+				"default": 30,
+        		"maximum": 120
+			},
+			"cameras": {
+                "type": "array",
+                "title": "List of Cameras",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string", "title": "Camera Name", "default": "Backyard camera" },
+                        "varname": { "type": "string", "title": "Varname", "default": "backyard"}
+                  }
+                }
             }
-        }
+	    }
     }
 }
