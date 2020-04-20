@@ -19,9 +19,9 @@
 				"description": "A unique Serial Number."
 			},
 			"Accessories":{
-				"type": "array",
+				"type": "object",
 				"title": "List of Accessories",
-				"items": {
+				"properties": {
 					"name": {
 						"title": "Name",
 						"type": "string",
