@@ -34,8 +34,6 @@ function arduino(log, config) {
 	} else {
 		this.AccessoryType = config["accessory-type"];
 	}
-	
-	this.log(config["language"]);
 
 	this.Manufacturer = config["manufacturer"] || "My manufacturer";
 	this.Model = config["model"] || "My model";
@@ -43,6 +41,8 @@ function arduino(log, config) {
 	this.FirmwareRevision = config["firmware-revision"] || "1.0";
 	this.HardwareRevision = config["hardware-revision"] || "1";
 	this.Name = config["name"] || "Arduino";
+	
+	this.Lang = config["language"] || "enGB";
 
 	this.auth = config["auth"] || "";
 	this.host = config["host"] || "127.0.0.1";
@@ -59,6 +59,8 @@ function arduino(log, config) {
 	this.defaultState = config["default-state"] || 0;
 	
 	this.uuid = UUIDGen.generate("uuid-hb-gen_"+this.Serial);
+	
+	this.log(this.Lang);
 	
 	this.log("uuid: " + this.uuid);
 	

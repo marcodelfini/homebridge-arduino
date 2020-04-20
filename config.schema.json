@@ -16,23 +16,23 @@
 			},
 			"language": {
 				"type": "string",
-				"default": "en-GB",
+				"default": "enGB",
 				"oneOf": [
 					{
 						"title": "English: United Kingdom - English",
-						"const": "en-GB"
+						"const": "enGB"
 					},
 					{
 						"title": "English: United States - English",
-						"const": "en-US"
+						"const": "enUS"
 					},
 					{
 						"title": "Italian: Italy - Italian",
-						"const": "it-IT"
+						"const": "itIT"
 					},
 					{
 						"title": "Italian: Switzerland - Italian",
-						"const": "it-CH"
+						"const": "itCH"
 					}
 				],
 				"required": true
