@@ -97,7 +97,7 @@ function arduino(log, config) {
 // Function invoked when homebridge tries to restore cached accessory.
 // Developer can configure accessory at here (like setup event handler).
 // Update current value.
-SamplePlatform.prototype.configureAccessory = function(accessory) {
+arduino.prototype.configureAccessory = function(accessory) {
   this.log(accessory.displayName, "Configure Accessory");
   var platform = this;
 
@@ -125,7 +125,7 @@ SamplePlatform.prototype.configureAccessory = function(accessory) {
 
 // Handler will be invoked when user try to config your plugin.
 // Callback can be cached and invoke when necessary.
-SamplePlatform.prototype.configurationRequestHandler = function(context, request, callback) {
+arduino.prototype.configurationRequestHandler = function(context, request, callback) {
 	this.log("Context: ", JSON.stringify(context));
 	this.log("Request: ", JSON.stringify(request));
 
@@ -138,7 +138,7 @@ SamplePlatform.prototype.configurationRequestHandler = function(context, request
 		// set "type" to platform if the plugin is trying to modify platforms section
 		// set "replace" to true will let homebridge replace existing config in config.json
 		// "config" is the data platform trying to save
-		callback(null, "platform", true, {"platform":"SamplePlatform", "otherConfig":"SomeData"});
+		callback(null, "platform", true, {"platform":"arduino", "otherConfig":"SomeData"});
 		return;
 	}
 
@@ -725,7 +725,7 @@ arduino.prototype._makeRequest = function (path, next) {
 };
 
 // Sample function to show how developer can add accessory dynamically from outside event
-SamplePlatform.prototype.addAccessory = function(accessoryName) {
+arduino.prototype.addAccessory = function(accessoryName) {
 	this.log("Add Accessory");
 	var platform = this;
 	var uuid;
@@ -749,10 +749,10 @@ SamplePlatform.prototype.addAccessory = function(accessoryName) {
 	});
 
 	this.accessories.push(newAccessory);
-	this.api.registerPlatformAccessories("homebridge-samplePlatform", "SamplePlatform", [newAccessory]);
+	this.api.registerPlatformAccessories("homebridge-arduino", "arduino", [newAccessory]);
 }
 
-SamplePlatform.prototype.updateAccessoriesReachability = function() {
+arduino.prototype.updateAccessoriesReachability = function() {
 	this.log("Update Reachability");
 	for (var index in this.accessories) {
 		var accessory = this.accessories[index];
@@ -761,9 +761,9 @@ SamplePlatform.prototype.updateAccessoriesReachability = function() {
 }
 
 // Sample function to show how developer can remove accessory dynamically from outside event
-SamplePlatform.prototype.removeAccessory = function() {
+arduino.prototype.removeAccessory = function() {
 	this.log("Remove Accessory");
-	this.api.unregisterPlatformAccessories("homebridge-samplePlatform", "SamplePlatform", this.accessories);
+	this.api.unregisterPlatformAccessories("homebridge-arduino", "arduino", this.accessories);
 
 	this.accessories = [];
 }
