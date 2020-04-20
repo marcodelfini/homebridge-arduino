@@ -60,6 +60,8 @@ function arduino(log, config) {
 	
 	this.uuid = UUIDGen.generate("uuid-hb-gen_"+this.Serial);
 	
+	this.log("uuid: " + this.uuid);
+	
 	this.toggle = false;
 }
 
