@@ -1,24 +1,18 @@
 {
-    "pluginAlias": "HomeConnect",
-    "pluginType": "platform",
-    "dynamicSchemaVersion": 1,
-    "singular": true,
+    "pluginAlias": "Arduino",
+    "pluginType": "accessory",
+    "singular": false,
     "headerDisplay": "*This is a temporary configuration schema for initial setup only. When the plugin runs it will replace this schema with one tailored to the available Home Connect appliances.*\n\n*Update [homebridge-config-ui-x](https://github.com/oznu/homebridge-config-ui-x) to version 4.8.1 or later if this message remains after the Home Connect Client has been configured.*\n\nFor help please refer to the [README](https://github.com/thoukydides/homebridge-homeconnect/blob/master/README.md) and [`config.json`](https://github.com/thoukydides/homebridge-homeconnect/wiki/config.json).",
-    "footerDisplay": "© 2019-2020 [Alexander Thoukydides](https://www.thouky.co.uk/)",
+    "footerDisplay": "© 2019-2020 [Marco Delfini](https://github.com/marcodelfini)",
     "schema": {
         "type": "object",
         "properties": {
-            "clientid": {
+            "name": {
+                "title": "Name",
                 "type": "string",
-                "minLength": 64,
-                "maxLength": 64,
-                "pattern": "^[0-9A-Fa-f]+$",
-                "required": true
-            },
-            "simulator": {
-                "type": "boolean",
-                "default": false,
-                "required": true
+                "required": true,
+                "default": "Arduino",
+                "description": "A unique name for the accessory. It will be used as the accessory name in HomeKit."
             },
             "language": {
                 "type": "object",
@@ -211,59 +205,197 @@
                         "required": true
                     }
                 }
+			},
+            "serial-number": {
+                "title": "Serial Number",
+                "type": "string",
+                "required": true,
+                "default": "123-456-789",
+                "description": "A unique Serial Number. It's very important and will be used to generate di uuid. Each accessory must have it different."
+            },
+            "accessory-type": {
+                "title": "Accessory Type",
+                "type": "integer",
+                "placeholder": "0",
+                "default": 0,
+                "oneOf": [
+                    {
+                        "title": "Switch (0)",
+                        "enum": [
+                            0
+                        ]
+                    },
+                    {
+                        "title": "Lightbulb (1)",
+                        "enum": [
+                            1
+                        ]
+                    },
+                    {
+                        "title": "Outlet (2)",
+                        "enum": [
+                            2
+                        ]
+                    },
+                    {
+                        "title": "Garage Door Opener (3)",
+                        "enum": [
+                            3
+                        ]
+                    },
+                    {
+                        "title": "Humidity Sensor (4)",
+                        "enum": [
+                            4
+                        ]
+                    },
+                    {
+                        "title": "Fan (5)",
+                        "enum": [
+                            5
+                        ]
+                    },
+                    {
+                        "title": "Temperature Sensor (6)",
+                        "enum": [
+                            6
+                        ]
+                    },
+                    {
+                        "title": "Light Sensor (7)",
+                        "enum": [
+                            7
+                        ]
+                    },
+                    {
+                        "title": "Lock Mechanism (8)",
+                        "enum": [
+                            8
+                        ]
+                    },
+                    {
+                        "title": "Motion Sensor (9)",
+                        "enum": [
+                            9
+                        ]
+                    },
+                    {
+                        "title": "Leak Sensor (10)",
+                        "enum": [
+                            10
+                        ]
+                    },
+                    {
+                        "title": "Thermostat (11)",
+                        "enum": [
+                            11
+                        ]
+                    }
+                ],
+                "required": true,
+                "description": "Types of Accessory: 0 Switch (default), 1 Lightbulb, 2 Outlet, 3 GarageDoorOpener, 4 Realy, 5 Fan, 6 TemperatureSensor, 7 Light Sensor, 8 Lock Mechanism, 9 Motion Sensor, 10 Leak Sensor, 11 Thermostat."
+            },
+            "optional-charac1": {
+                "title": "Optional Characteristics 1",
+                "type": "boolean",
+                "default": false,
+                "required": false,
+                "description": "Optional Characteristics 1: LIGHTBULB: Brightness, FAN: RotationDirection, THERMOSTAT: Celsius Deactive (default), Fahrenheit Active."
+            },
+            "optional-charac2": {
+                "title": "Optional Characteristics 2",
+                "type": "boolean",
+                "default": false,
+                "required": false,
+                "description": "Optional Characteristics 2: LIGHTBULB: Hue, FAN: RotationSpeed."
+            },
+            "optional-charac3": {
+                "title": "Optional Characteristics 3",
+                "type": "boolean",
+                "default": false,
+                "required": false,
+                "description": "Optional Characteristics 3: LIGHTBULB: Saturation."
+            },
+            "optional-charac4": {
+                "title": "Optional Characteristics 4",
+                "type": "boolean",
+                "default": false,
+                "required": false,
+                "description": "Optional Characteristics 4: LIGHTBULB: ColorTemperature."
+            },
+            "auth": {
+                "title": "Auth Token",
+                "type": "string",
+                "required": false,
+                "description": "Auth token."
+            },
+            "host": {
+                "title": "Host",
+                "type": "string",
+                "placeholder": "127.0.0.1",
+                "default": "127.0.0.1",
+                "required": false,
+                "description": "Arduino host, default is 127.0.0.1 (NO add http:// before, only the ip or domain name)."
+            },
+            "base-url": {
+                "title": "Base Url",
+                "type": "string",
+                "placeholder": "/",
+                "default": "/",
+                "required": false,
+                "description": "Base URL, default is / (Example: \"/data/index.php\")."
+            },
+            "port": {
+                "title": "Port",
+                "type": "integer",
+                "placeholder": "80",
+                "default": 80,
+                "required": false,
+                "description": "Arduino Web port, default is 80."
+            },
+            "duration": {
+                "title": "Duration",
+                "type": "integer",
+                "placeholder": "0",
+                "default": 0,
+                "required": false,
+                "description": "Time in second (default is 0 not active): SWITCH: time to Toggle State (becomes a button)."
+            },
+            "default-state": {
+                "title": "Default State",
+                "type": "boolean",
+                "placeholder": false,
+                "default": false,
+                "description": "Default State (begin state, or return state if duration is setted)."
+            },
+            "logLevel": {
+                "title": "Loging level",
+                "type": "integer",
+                "placeholder": "1",
+                "default": 1,
+                "oneOf": [
+                    {
+                        "title": "Off (0)",
+                        "enum": [
+                            0
+                        ]
+                    },
+                    {
+                        "title": "Error (1)",
+                        "enum": [
+                            1
+                        ]
+                    },
+                    {
+                        "title": "Info (2)",
+                        "enum": [
+                            2
+                        ]
+                    }
+                ],
+                "required": false,
+                "description": "Three different levels: 0: logging disabled, 1: logs only HTTP errors (default), 2: logs each HTTP response."
             }
         }
-    },
-    "form": [
-        {
-            "type": "fieldset",
-            "title": "Home Connect Client",
-            "expandable": false,
-            "items": [
-                {
-                    "key": "simulator",
-                    "title": "Client Type",
-                    "type": "select",
-                    "titleMap": {
-                        "false": "Physical Appliances (production server)",
-                        "true": "Simulated Appliances (test server)"
-                    }
-                },
-                {
-                    "key": "clientid",
-                    "title": "Client ID",
-                    "description": "Create an application via the <a href=\"https://developer.home-connect.com/applications\">Home Connect Developer Program</a>, with <strong>OAuth Flow</strong> set to <strong>Device Flow</strong>.",
-                    "placeholder": "e.g. 0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF",
-                    "condition": {
-                        "functionBody": "return !model.simulator"
-                    }
-                },
-                {
-                    "key": "clientid",
-                    "title": "Client ID",
-                    "description": "Enter the Client ID for the automatically generated <a href=\"https://developer.home-connect.com/applications\">API Web Client</a> to use the <a href=\"https://developer.home-connect.com/simulator\">Appliance Simulators</a>.<br>Use this to test the functionality of this plugin without requiring access to physical appliances.",
-                    "placeholder": "e.g. 0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF",
-                    "condition": {
-                        "functionBody": "return model.simulator"
-                    }
-                },
-                {
-                    "key": "language.api",
-                    "title": "API Language",
-                    "description": "This changes the language used for program names and their options.",
-                    "condition": {
-                        "functionBody": "return !model.simulator && model.clientid"
-                    }
-                },
-                {
-                    "type": "help",
-                    "helpvalue": "<p>This plugin requires authorisation to access Home Connect appliances.</p><p>The authorisation link will appear here (and in the Homebridge log file) after the Client ID has been configured and the plugin started.</p>",
-                    "condition": {
-                        "functionBody": "return !model.simulator && model.clientid"
-                    }
-                }
-            ]
-        }
-    ],
-    "display": null
+    }
 }
