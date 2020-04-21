@@ -226,6 +226,14 @@
 				],
 				"required": false,
 				"description": "Three different levels: 0: logging disabled, 1: logs only HTTP errors (default), 2: logs each HTTP response."
+			},
+			"disable-accessory": {
+				"title": "Disable this Accessory",
+				"type": "boolean",
+				"placeholder": false,
+				"default": false,
+				"required": false,
+				"description": "The accessory is enabled (Default false)."
 			}
 		}
 	}

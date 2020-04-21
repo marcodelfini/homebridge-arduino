@@ -6,6 +6,10 @@ function arduino(log, config) {
 	if (!config) {
 	  return;
 	}
+	this.DisableAccessory = config["disable-accessory"] || false;
+	if (this.DisableAccessory == true) {
+	  return;
+	}
 	this.log = log;
 	
 	// logLevel 0: disabled, 1: error, 2: info
