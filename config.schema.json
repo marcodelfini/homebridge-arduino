@@ -53,79 +53,79 @@
 					{
 						"title": "Switch (0)",
 						"enum": [
-					0
+							0
 						]
 					},
 					{
 						"title": "Lightbulb (1)",
 						"enum": [
-					1
+							1
 						]
 					},
 					{
 						"title": "Outlet (2)",
 						"enum": [
-					2
+							2
 						]
 					},
 					{
 						"title": "Garage Door Opener (3)",
 						"enum": [
-					3
+							3
 						]
 					},
 					{
 						"title": "Humidity Sensor (4)",
 						"enum": [
-					4
+							4
 						]
 					},
 					{
 						"title": "Fan (5)",
 						"enum": [
-					5
+							5
 						]
 					},
 					{
 						"title": "Temperature Sensor (6)",
 						"enum": [
-					6
+							6
 						]
 					},
 					{
 						"title": "Light Sensor (7)",
 						"enum": [
-					7
+							7
 						]
 					},
 					{
 						"title": "Lock Mechanism (8)",
 						"enum": [
-					8
+							8
 						]
 					},
 					{
 						"title": "Motion Sensor (9)",
 						"enum": [
-					9
+							9
 						]
 					},
 					{
 						"title": "Leak Sensor (10)",
 						"enum": [
-					10
+							10
 						]
 					},
 					{
 						"title": "Thermostat (11)",
 						"enum": [
-					11
+							11
 						]
 					},
 					{
 						"title": "Valve (12)",
 						"enum": [
-					12
+							12
 						]
 					}
 				],
@@ -164,7 +164,7 @@
 					}
 				],
 				"required": false,
-				"condition": "model.accessory-type=='12'"
+				"description": "Only for Valve accessory type."
 			},
 			"optional-charac1": {
 				"title": "Optional Characteristics 1",
