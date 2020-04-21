@@ -307,7 +307,16 @@ arduino.prototype.getServices = function () {
 	}else if(this.AccessoryType == 12){ // Valve
 		var functionService = new Service.Valve(this.Name);
 		// 0 GENERIC, 1 IRRIGATION/SPRINKLER, 2 SHOWER_HEAD, 3 WATER_FAUCET
-		functionService.setCharacteristic(Characteristic.ValveType, this.ValveType); 
+		this.log(this.ValveType);
+		if(this.ValveType == 1){
+			functionService.getCharacteristic(Characteristic.ValveType).updateValue(Characteristic.ValveType.IRRIGATION);
+		}else if(this.ValveType == 2){
+			functionService.getCharacteristic(Characteristic.ValveType).updateValue(Characteristic.ValveType.SHOWER_HEAD);
+		}else if(this.ValveType == 3){
+			functionService.getCharacteristic(Characteristic.ValveType).updateValue(Characteristic.ValveType.WATER_FAUCET);
+		}else{ // 0 Valve Type by default
+			functionService.getCharacteristic(Characteristic.ValveType).updateValue(Characteristic.ValveType.GENERIC_VALVE);
+		}
 		
 		functionService.getCharacteristic(Characteristic.Active)
 			.on("get", this.getValveActive.bind(this))
@@ -621,13 +630,13 @@ arduino.prototype._responseHandler = function (res, next) {
 				if(jsonBody.ValveActive == 1){
 					//this.functionService.setCharacteristic(Characteristic.SetDuration, 50000);
 					//this.functionService.setCharacteristic(Characteristic.RemainingDuration, 50000);
-					this.functionService.setCharacteristic(Characteristic.InUse, 1);
-					next(null, true);
+					this.functionService.getCharacteristic(Characteristic.InUse).updateValue(Characteristic.InUse.IN_USE);
+					next(null, Characteristic.Active.ACTIVE);
 				}else{
 					//this.functionService.setCharacteristic(Characteristic.SetDuration, 0);
 					//this.functionService.setCharacteristic(Characteristic.RemainingDuration, 0);
-					this.functionService.setCharacteristic(Characteristic.InUse, 0);
-					next(null, false);
+					this.functionService.getCharacteristic(Characteristic.InUse).updateValue(Characteristic.InUse.NOT_IN_USE);
+					next(null, Characteristic.Active.INACTIVE);
 				}
 			// Error
 			} else {

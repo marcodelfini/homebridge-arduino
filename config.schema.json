@@ -135,8 +135,8 @@
 			"valve-type": {
 				"title": "Valve Type",
 				"type": "integer",
-				"placeholder": "1",
-				"default": 1,
+				"placeholder": "0",
+				"default": 0,
 				"oneOf": [
 					{
 						"title": "Generic",
