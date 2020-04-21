@@ -627,7 +627,6 @@ arduino.prototype._responseHandler = function (res, next) {
 					this.functionService.setCharacteristic(Characteristic.InUse, 0);
 				}
 				next(null, jsonBody.ValveActive);
-			}
 			// Error
 			} else {
 				this.log("nothing body: "+body);
