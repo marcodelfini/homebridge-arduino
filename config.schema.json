@@ -139,25 +139,25 @@
 				"default": 0,
 				"oneOf": [
 					{
-						"title": "Generic",
+						"title": "Generic (0)",
 						"enum": [
 							0
 						]
 					},
 					{
-						"title": "Irrigation/Sprinkler",
+						"title": "Irrigation/Sprinkler (1)",
 						"enum": [
 							1
 						]
 					},
 					{
-						"title": "Shower Head",
+						"title": "Shower Head (2)",
 						"enum": [
 							2
 						]
 					},
 					{
-						"title": "Water Faucet",
+						"title": "Water Faucet (3)",
 						"enum": [
 							3
 						]

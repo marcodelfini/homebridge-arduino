@@ -321,6 +321,9 @@ arduino.prototype.getServices = function () {
 		functionService.getCharacteristic(Characteristic.Active)
 			.on("get", this.getValveActive.bind(this))
 			.on("set", this.setValveActive.bind(this));
+		
+		functionService.getCharacteristic(Characteristic.StatusFault)
+			.on("get", this.getValveStatusFault.bind(this));
 	}else{ // Switch (0)
 		var functionService = new Service.Switch(this.Name);
 		functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState);
@@ -509,6 +512,9 @@ arduino.prototype.setValveActive = function (newVal, next) {
 	this._makeRequest("?setValveActive=" + newVal + "&auth=" + this.auth + "&uuid=" + this.uuid, next);
 };
 
+arduino.prototype.getValveStatusFault = function (next) {
+	this._makeRequest("?getValveStatusFault" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+};
 
 
 
@@ -637,6 +643,13 @@ arduino.prototype._responseHandler = function (res, next) {
 					//this.functionService.setCharacteristic(Characteristic.RemainingDuration, 0);
 					this.functionService.getCharacteristic(Characteristic.InUse).updateValue(Characteristic.InUse.NOT_IN_USE);
 					next(null, Characteristic.Active.INACTIVE);
+				}
+			} else if (typeof jsonBody.ValveStatusFault !== 'undefined') {
+				// 0 NO_FAULT, 1 GENERAL_FAULT
+				if(jsonBody.ValveStatusFault == 1){
+					next(null, Characteristic.StatusFault.GENERAL_FAULT);
+				}else{
+					next(null, Characteristic.StatusFault.NO_FAULT);
 				}
 			// Error
 			} else {
