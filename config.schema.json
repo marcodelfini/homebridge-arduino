@@ -163,7 +163,8 @@
 						]
 					}
 				],
-				"required": false
+				"required": false,
+				"condition": "model.accessory-type=='12'"
 			},
 			"optional-charac1": {
 				"title": "Optional Characteristics 1",

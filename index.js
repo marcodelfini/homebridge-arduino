@@ -618,15 +618,17 @@ arduino.prototype._responseHandler = function (res, next) {
 				}
 			// Valve
 			} else if (typeof jsonBody.ValveActive !== 'undefined') {
-				if(jsonBody.ValveActive == true){
-					this.functionService.setCharacteristic(Characteristic.SetDuration, 50000);
-					this.functionService.setCharacteristic(Characteristic.RemainingDuration, 50000);
+				if(jsonBody.ValveActive == 1){
+					//this.functionService.setCharacteristic(Characteristic.SetDuration, 50000);
+					//this.functionService.setCharacteristic(Characteristic.RemainingDuration, 50000);
 					this.functionService.setCharacteristic(Characteristic.InUse, 1);
+					next(null, true);
 				}else{
-					this.functionService.setCharacteristic(Characteristic.SetDuration, 0);
+					//this.functionService.setCharacteristic(Characteristic.SetDuration, 0);
+					//this.functionService.setCharacteristic(Characteristic.RemainingDuration, 0);
 					this.functionService.setCharacteristic(Characteristic.InUse, 0);
+					next(null, false);
 				}
-				next(null, jsonBody.ValveActive);
 			// Error
 			} else {
 				this.log("nothing body: "+body);
