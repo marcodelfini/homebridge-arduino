@@ -121,10 +121,50 @@
 						"enum": [
 					11
 						]
+					},
+					{
+						"title": "Valve (12)",
+						"enum": [
+					12
+						]
 					}
 				],
 				"required": true,
 				"description": "Types of Accessory: 0 Switch (default), 1 Lightbulb, 2 Outlet, 3 GarageDoorOpener, 4 Realy, 5 Fan, 6 TemperatureSensor, 7 Light Sensor, 8 Lock Mechanism, 9 Motion Sensor, 10 Leak Sensor, 11 Thermostat."
+			},
+			"valve-type": {
+				"title": "Valve Type",
+				"type": "integer",
+				"placeholder": "1",
+				"default": 1,
+				"oneOf": [
+					{
+						"title": "Generic",
+						"enum": [
+							0
+						]
+					},
+					{
+						"title": "Irrigation/Sprinkler",
+						"enum": [
+							1
+						]
+					},
+					{
+						"title": "Shower Head",
+						"enum": [
+							2
+						]
+					},
+					{
+						"title": "Water Faucet",
+						"enum": [
+							3
+						]
+					}
+				],
+				"required": false,
+				"condition": "model.accessory-type==12"
 			},
 			"optional-charac1": {
 				"title": "Optional Characteristics 1",

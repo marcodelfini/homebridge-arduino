@@ -4,13 +4,15 @@ var http = require("http");
 
 function arduino(log, config) {
 	if (!config) {
-	  return;
+		return;
 	}
+	
+	this.log = log;
 	this.DisableAccessory = config["disable-accessory"] || false;
 	if (this.DisableAccessory == true) {
-	  return;
+		this.log("Accessory disabled in configuration. It will not be added.");
+		return;
 	}
-	this.log = log;
 	
 	// logLevel 0: disabled, 1: error, 2: info
 	if (typeof config["logLevel"] === "undefined") {
@@ -38,6 +40,7 @@ function arduino(log, config) {
 	} else {
 		this.AccessoryType = config["accessory-type"];
 	}
+	this.ValveType = config["valve-type"] || 1;
 
 	this.Manufacturer = config["manufacturer"] || "My manufacturer";
 	this.Model = config["model"] || "My model";
@@ -64,11 +67,10 @@ function arduino(log, config) {
 	
 	this.uuid = UUIDGen.generate("uuid-hb-gen_"+this.Serial);
 	
-	this.log(this.Lang);
-	
+	this.log("lang: " + this.Lang + ", accessory type: " + this.AccessoryType);
 	this.log("uuid: " + this.uuid);
 	
-	this.toggle = false;
+	this.inTimer = false;
 }
 
 arduino.prototype.getServices = function () {	
@@ -302,6 +304,14 @@ arduino.prototype.getServices = function () {
 		
 		functionService.setCharacteristic(Characteristic.TemperatureDisplayUnits) // 0 CELSIUS, 1 FAHRENHEIT
 			.on("get", this.getTemperatureDisplayUnits.bind(this));
+	}else if(this.AccessoryType == 12){ // Valve
+		var functionService = new Service.Valve(this.Name);
+		// 0 GENERIC, 1 IRRIGATION/SPRINKLER, 2 SHOWER_HEAD, 3 WATER_FAUCET
+		functionService.setCharacteristic(Characteristic.ValveType, this.ValveType); 
+		
+		functionService.getCharacteristic(Characteristic.Active)
+			.on("get", this.getValveActive.bind(this))
+			.on("set", this.setValveActive.bind(this));
 	}else{ // Switch (0)
 		var functionService = new Service.Switch(this.Name);
 		functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState);
@@ -326,11 +336,11 @@ arduino.prototype.setStatus = function (newVal, next) {
 	const self = this;
 	// Switch (becomes a button), Lightbulb, Outlet
 	var AccessoryToggle = [0,1,2];
-	if(this.toggle == false){
+	if(this.inTimer == false){
 		this._makeRequest((newVal ? "?enable" : "?disable") + "&auth=" + this.auth + "&uuid=" + this.uuid, next);
-		if(this.duration > 0 && AccessoryToggle.includes(this.AccessoryType) == true && this.toggle == false){
+		if(this.duration > 0 && AccessoryToggle.includes(this.AccessoryType) == true && this.inTimer == false){
 			setTimeout(function() {
-				self.toggle = true;
+				self.inTimer = true;
 				self._makeRequest((this.defaultState ? "?enable" : "?disable") + "&auth=" + self.auth + "&uuid="+self.uuid);
 			}, (this.duration*1000));
 		}
@@ -481,6 +491,17 @@ arduino.prototype.setTemperatureDisplayUnits = function (newVal) {
 	this._makeRequest("?setTemperatureDisplayUnits=" + newVal + "&auth=" + this.auth+"&uuid="+this.uuid, null);
 };
 
+// Valve
+arduino.prototype.getValveActive = function (next) {
+	this._makeRequest("?getValveActive" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+};
+
+arduino.prototype.setValveActive = function (newVal, next) {
+	this._makeRequest("?setValveActive=" + newVal + "&auth=" + this.auth + "&uuid=" + this.uuid, next);
+};
+
+
+
 
 arduino.prototype._responseHandler = function (res, next) {
 	let body = "";
@@ -495,18 +516,18 @@ arduino.prototype._responseHandler = function (res, next) {
 			// All
 			if (typeof jsonBody.status !== 'undefined') {
 				if (jsonBody.status == true){
-					if(this.toggle == false){
+					if(this.inTimer == false){
 						next(null, true);
 					}else{
 						this.functionService.getCharacteristic(Characteristic.On).updateValue(true);
-						this.toggle = false;
+						this.inTimer = false;
 					}
 				}else{
-					if(this.toggle == false){
+					if(this.inTimer == false){
 						next(null, false);
 					}else{
 						this.functionService.getCharacteristic(Characteristic.On).updateValue(false);
-						this.toggle = false;
+						this.inTimer = false;
 					}
 				}
 			// Light Bulb
@@ -595,6 +616,18 @@ arduino.prototype._responseHandler = function (res, next) {
 				if (typeof jsonBody.next === 'function') {
 					next(null, jsonBody.TemperatureDisplayUnits);
 				}
+			// Valve
+			} else if (typeof jsonBody.ValveActive !== 'undefined') {
+				if(jsonBody.ValveActive == true){
+					this.functionService.setCharacteristic(Characteristic.SetDuration, 50000);
+					this.functionService.setCharacteristic(Characteristic.RemainingDuration, 50000);
+					this.functionService.setCharacteristic(Characteristic.InUse, 1);
+				}else{
+					this.functionService.setCharacteristic(Characteristic.SetDuration, 0);
+					this.functionService.setCharacteristic(Characteristic.InUse, 0);
+				}
+				next(null, jsonBody.ValveActive);
+			}
 			// Error
 			} else {
 				this.log("nothing body: "+body);
