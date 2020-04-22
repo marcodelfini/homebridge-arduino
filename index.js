@@ -402,14 +402,18 @@ arduino.prototype.getServices = function () {
 				this.inTimer = setTimeout(()=> {
 					this.log("Water Valve Timer Expired. Shutting OFF Valve");
 					// use 'setvalue' when the timer ends so it triggers the .on('set'...) event
-					functionService.getCharacteristic(Characteristic.Active).setValue(0); 
+					characteristicActive.setValue(0);
+					characteristicInUse.setValue(0);
+					functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(0);
 					this.ValveLastActivation = null;
+					clearTimeout(this.inTimer); // clear any existing timer
 				}, (this.duration*1000));
 			// else when resetart set all to inactive
 			}else{
-				this.ValveLastActivation = null;
-				characteristicInUse.setValue(false);
+				characteristicActive.setValue(0);
+				characteristicInUse.setValue(0);
 				functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(0);
+				this.ValveLastActivation = null;
 				clearTimeout(this.inTimer);
 			}
 		}
