@@ -331,18 +331,21 @@ arduino.prototype.getServices = function () {
 		
 		const characteristicStatusFault = functionService.getCharacteristic(Characteristic.StatusFault)
 										.on("get", this.getValveStatusFault.bind(this));
-										setInterval(()=> {
+										
+										this.CheckValveStatusFault = setInterval(()=> {
 											// use 'getvalue' when the timer ends so it triggers the .on('get'...) event
 											characteristicStatusFault.getValue();
 											this.log("update characteristicStatusFault "+characteristicStatusFault.value);
 											if(characteristicStatusFault.value == Characteristic.StatusFault.GENERAL_FAULT){
 												characteristicActive.setValue(0);
 												characteristicInUse.setValue(0);
-												functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(0);
-												this.ValveLastActivation = null;
-												clearTimeout(this.inTimer);
+												if(this.optionalCharac1 == true){
+													functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(0);
+													this.ValveLastActivation = null;
+													clearTimeout(this.inTimer);
+												}
 											}
-										}, (5*1000));;
+										}, (5*1000));
 
 		if(this.optionalCharac1 == true){
 			functionService.getCharacteristic(Characteristic.SetDuration)
