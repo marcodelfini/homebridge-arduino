@@ -323,7 +323,7 @@ arduino.prototype.getServices = function () {
 										.on("get", this.getValveActive.bind(this))
 										.on("set", this.setValveActive.bind(this))
 										.on('change', (data) => {
-											characteristicInUse.setValue(data.newValue);
+											functionService.getCharacteristic(Characteristic.InUse).updateValue(data.newValue);
 										});
 		
 		const characteristicInUse = functionService.getCharacteristic(Characteristic.InUse)
