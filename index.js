@@ -321,10 +321,7 @@ arduino.prototype.getServices = function () {
 		
 		const characteristicActive = functionService.getCharacteristic(Characteristic.Active)
 										.on("get", this.getValveActive.bind(this))
-										.on("set", this.setValveActive.bind(this))
-										.on('change', (data) => {
-											functionService.getCharacteristic(Characteristic.InUse).updateValue(data.newValue);
-										});
+										.on("set", this.setValveActive.bind(this));
 		
 		const characteristicInUse = functionService.getCharacteristic(Characteristic.InUse)
 										.on('get', (next) => {
@@ -334,11 +331,11 @@ arduino.prototype.getServices = function () {
 		if(this.optionalCharac1 == true){
 			functionService.getCharacteristic(Characteristic.SetDuration)
 				.on('get', (next) => {
-					next(null, this.duration)
+					next(null, this.duration);
 				})
 				.on('change', (data)=> {
-					this.log("Water Valve Time Duration Set to: " + data.newValue/60 + " Minutes")
-					this.duration = data.newValue
+					this.log("Water Valve Time Duration Set to: " + data.newValue/60 + " Minutes");
+					this.duration = data.newValue;
 					
 					if(functionService.getCharacteristic(Characteristic.InUse).value) {
 						this.ValveLastActivation = (new Date()).getTime();
@@ -356,27 +353,27 @@ arduino.prototype.getServices = function () {
 			
 			functionService.getCharacteristic(Characteristic.RemainingDuration)
 				.on('get', (next) => {
-					var remainingTime = this.duration - Math.floor(((new Date()).getTime() - this.ValveLastActivation) / 1000)
+					var remainingTime = this.duration - Math.floor(((new Date()).getTime() - this.ValveLastActivation) / 1000);
 					if (!remainingTime || remainingTime < 0) {
-						remainingTime = 0
+						remainingTime = 0;
 					}
-					next(null, remainingTime)
+					next(null, remainingTime);
 				});
 			
 			functionService.getCharacteristic(Characteristic.InUse)
 				.on('change', (data) => {
 					switch(data.newValue) {
 						case 0:
-							this.ValveLastActivation = null
+							this.ValveLastActivation = null;
 							functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(0);
-							functionService.getCharacteristic(Characteristic.Active).updateValue(0);
+							functionService.getCharacteristic(Characteristic.Active).setValue(0);
 							clearTimeout(this.inTimer); // clear the timer if it was used!
 							this.log("Water Valve is OFF!");
 							break;
 						case 1:
 							this.ValveLastActivation = (new Date()).getTime();
 							functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(this.duration);
-							functionService.getCharacteristic(Characteristic.Active).updateValue(1);
+							functionService.getCharacteristic(Characteristic.Active).setValue(1);
 							this.log("Water Valve Turning ON with Timer Set to: "+  this.duration/60 + " Minutes");
 							clearTimeout(this.inTimer); // clear any existing timer
 							this.inTimer = setTimeout(()=> {
