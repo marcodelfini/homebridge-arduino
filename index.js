@@ -328,24 +328,6 @@ arduino.prototype.getServices = function () {
 										.on('get', (next) => {
 											next(null, characteristicActive.value);
 										});
-		
-		const characteristicStatusFault = functionService.getCharacteristic(Characteristic.StatusFault)
-										.on("get", this.getValveStatusFault.bind(this));
-										
-										/*this.CheckValveStatusFault = setInterval(()=> {
-											// use 'getvalue' when the timer ends so it triggers the .on('get'...) event
-											characteristicStatusFault.getValue();
-											this.log("update characteristicStatusFault "+characteristicStatusFault.value + " "+ Characteristic.StatusFault.GENERAL_FAULT);
-											if(characteristicStatusFault.value == Characteristic.StatusFault.GENERAL_FAULT){
-												characteristicActive.setValue(0);
-												characteristicInUse.setValue(0);
-												if(this.optionalCharac1 == true){
-													functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(0);
-													this.ValveLastActivation = null;
-													clearTimeout(this.inTimer);
-												}
-											}
-										}, (5*1000));*/
 
 		if(this.optionalCharac1 == true){
 			functionService.getCharacteristic(Characteristic.SetDuration)
@@ -401,7 +383,7 @@ arduino.prototype.getServices = function () {
 								functionService.getCharacteristic(Characteristic.Active).setValue(0);
 								functionService.getCharacteristic(Characteristic.InUse).updateValue(0); 
 								this.ValveLastActivation = null;
-							}, (this.duration *1000));
+							}, (this.duration*1000));
 							break;
 						}
 				});
@@ -432,6 +414,26 @@ arduino.prototype.getServices = function () {
 				clearTimeout(this.inTimer);
 			}
 		}
+		
+
+
+		const characteristicStatusFault = functionService.getCharacteristic(Characteristic.StatusFault)
+											.on("get", this.getValveStatusFault.bind(this));
+								
+								setInterval(()=> {
+									// use 'getvalue' when the timer ends so it triggers the .on('get'...) event
+									characteristicStatusFault.getValue();
+									this.log("update characteristicStatusFault "+characteristicStatusFault.value + " "+ Characteristic.StatusFault.GENERAL_FAULT);
+									if(characteristicStatusFault.value == Characteristic.StatusFault.GENERAL_FAULT){
+										characteristicActive.setValue(0);
+										characteristicInUse.setValue(0);
+										if(this.optionalCharac1 == true){
+											functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(0);
+											this.ValveLastActivation = null;
+											clearTimeout(this.inTimer);
+										}
+									}
+								}, (5*1000));
 	}else{ // Switch (0)
 		var functionService = new Service.Switch(this.Name);
 		functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState);
