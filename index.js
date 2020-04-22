@@ -418,7 +418,7 @@ arduino.prototype.getServices = function () {
 		const characteristicStatusFault = functionService.getCharacteristic(Characteristic.StatusFault)
 											.on("get", this.getValveStatusFault.bind(this));
 								
-								setInterval(()=> {
+								/*setInterval(()=> {
 									// use 'getvalue' when the timer ends so it triggers the .on('get'...) event
 									characteristicStatusFault.getValue();
 									this.log("update characteristicStatusFault "+characteristicStatusFault.value + " "+ Characteristic.StatusFault.GENERAL_FAULT);
@@ -432,7 +432,7 @@ arduino.prototype.getServices = function () {
 											clearTimeout(this.inTimer);
 										}
 									}
-								}, (5*1000));
+								}, (5*1000));*/
 	}else{ // Switch (0)
 		var functionService = new Service.Switch(this.Name);
 		functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState);
