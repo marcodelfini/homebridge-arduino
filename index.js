@@ -321,98 +321,49 @@ arduino.prototype.getServices = function () {
 		
 		const characteristicActive = functionService.getCharacteristic(Characteristic.Active)
 										.on("get", this.getValveActive.bind(this))
-										.on("set", this.setValveActive.bind(this));
+										.on("set", this.setValveActive.bind(this))
+										.on('change', (data) => {
+											if(data.newValue == "1"){
+												if(this.optionalCharac1 == true){
+													setTimeout(function() {
+														this.ValveLastActivation = this.duration + Math.floor(new Date().getTime() / 1000);
+														functionService.setCharacteristic(Characteristic.SetDuration, 0);
+														functionService.setCharacteristic(Characteristic.InUse, 0);
+													}, (this.duration*1000));
+												}
+											}else{
+												if(this.optionalCharac1 == true){
+													setTimeout(function() {
+														this.ValveLastActivation = this.duration + Math.floor(new Date().getTime() / 1000);
+														functionService.setCharacteristic(Characteristic.SetDuration, this.duration);
+														functionService.setCharacteristic(Characteristic.RemainingDuration, this.duration);
+														functionService.setCharacteristic(Characteristic.InUse, 1);
+													}, (this.duration*1000));
+												}
+											}
+										}
 		
-		const characteristicInUse = functionService.getCharacteristic(Characteristic.InUse)
-										.on('get', (next) => {
-											next(null, characteristicActive.value);
-										});
+		functionService.getCharacteristic(Characteristic.InUse)
+							.on('get', (next) => {
+								next(null, characteristicActive.value);
+							});
 
 		if(this.optionalCharac1 == true){
+			
 			functionService.getCharacteristic(Characteristic.SetDuration)
-				.on('get', (next) => {
-					next(null, this.duration);
-				})
-				.on('change', (data)=> {
-					this.log("Water Valve Time Duration Set to: " + data.newValue/60 + " Minutes");
-					this.duration = data.newValue;
-					
-					if(functionService.getCharacteristic(Characteristic.InUse).value) {
-						this.ValveLastActivation = (new Date()).getTime();
-						functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(data.newValue);
-
-						clearTimeout(this.inTimer); // clear any existing timer
-						this.inTimer = setTimeout( ()=> {
-							this.log("Water Valve Timer Expired. Shutting OFF Valve");
-							functionService.getCharacteristic(Characteristic.Active).setValue(0);
-							functionService.getCharacteristic(Characteristic.InUse).updateValue(0);
-							this.ValveLastActivation = null;
-						}, (data.newValue *1000));
-					}
-				});
+					.on('set', (next) => {
+						this.duration = next.newValue;
+						next(null, this.duration);
+					});
 			
 			functionService.getCharacteristic(Characteristic.RemainingDuration)
-				.on('get', (next) => {
-					var remainingTime = this.duration - Math.floor(((new Date()).getTime() - this.ValveLastActivation) / 1000);
-					if (!remainingTime || remainingTime < 0) {
-						remainingTime = 0;
-					}
-					next(null, remainingTime);
-				});
-			
-			functionService.getCharacteristic(Characteristic.InUse)
-				.on('change', (data) => {
-					switch(data.newValue) {
-						case 0:
-							this.ValveLastActivation = null;
-							functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(0);
-							functionService.getCharacteristic(Characteristic.Active).setValue(0);
-							clearTimeout(this.inTimer); // clear the timer if it was used!
-							this.log("Water Valve is OFF!");
-							break;
-						case 1:
-							this.ValveLastActivation = (new Date()).getTime();
-							functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(this.duration);
-							functionService.getCharacteristic(Characteristic.Active).setValue(1);
-							this.log("Water Valve Turning ON with Timer Set to: "+  this.duration/60 + " Minutes");
-							clearTimeout(this.inTimer); // clear any existing timer
-							this.inTimer = setTimeout(()=> {
-								this.log("Water Valve Timer Expired. Shutting OFF Valve");
-								// use 'setvalue' when the timer ends so it triggers the .on('set'...) event
-								functionService.getCharacteristic(Characteristic.Active).setValue(0);
-								functionService.getCharacteristic(Characteristic.InUse).updateValue(0);
-								this.ValveLastActivation = null;
-							}, (this.duration*1000));
-							break;
+					.on('get', (next) => {
+						var remainingTime = this.duration - Math.floor(((new Date()).getTime() - this.ValveLastActivation) / 1000);
+						if (!remainingTime || remainingTime < 0) {
+							remainingTime = 0;
 						}
-				});
-			
-			this.log("active: "+characteristicActive.value);
-			// If Homebridge crash when valve is on the timer reset
-			if (characteristicActive.value == true) {
-				this.ValveLastActivation = (new Date()).getTime();
-				functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(this.duration);
-				functionService.getCharacteristic(Characteristic.Active).updateValue(1);
-				functionService.getCharacteristic(Characteristic.InUse).updateValue(1);
-				this.log("Water Valve is ON After Restart. Setting Timer to: "+  this.duration/60 + " Minutes");	
-				clearTimeout(this.inTimer); // clear any existing timer
-				this.inTimer = setTimeout(()=> {
-					this.log("Water Valve Timer Expired. Shutting OFF Valve");
-					// use 'setvalue' when the timer ends so it triggers the .on('set'...) event
-					characteristicActive.setValue(0);
-					characteristicInUse.setValue(0);
-					functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(0);
-					this.ValveLastActivation = null;
-					clearTimeout(this.inTimer); // clear any existing timer
-				}, (this.duration*1000));
-			// else when resetart set all to inactive
-			}else{
-				characteristicActive.setValue(0);
-				characteristicInUse.setValue(0);
-				functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(0);
-				this.ValveLastActivation = null;
-				clearTimeout(this.inTimer);
-			}
+						next(null, remainingTime);
+					});
 		}
 		
 		const characteristicStatusFault = functionService.getCharacteristic(Characteristic.StatusFault)
