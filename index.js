@@ -748,10 +748,8 @@ arduino.prototype._responseHandler = function (res, next) {
 			} else if (typeof jsonBody.ValveActive !== 'undefined') {
 				if(jsonBody.ValveActive == 1){
 					next(null, Characteristic.Active.ACTIVE);
-					this.functionService.getCharacteristic(Characteristic.InUse).updateValue(Characteristic.InUse.IN_USE);
 				}else{
 					next(null, Characteristic.Active.INACTIVE);
-					this.functionService.getCharacteristic(Characteristic.InUse).updateValue(Characteristic.InUse.NOT_IN_USE);
 				}
 			} else if (typeof jsonBody.ValveStatusFault !== 'undefined') {
 				// 0 NO_FAULT, 1 GENERAL_FAULT
