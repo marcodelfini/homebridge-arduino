@@ -335,7 +335,7 @@ arduino.prototype.getServices = function () {
 										this.CheckValveStatusFault = setInterval(()=> {
 											// use 'getvalue' when the timer ends so it triggers the .on('get'...) event
 											characteristicStatusFault.getValue();
-											this.log("update characteristicStatusFault "+characteristicStatusFault.value);
+											this.log("update characteristicStatusFault "+characteristicStatusFault.value + " "+ Characteristic.StatusFault.GENERAL_FAULT);
 											if(characteristicStatusFault.value == Characteristic.StatusFault.GENERAL_FAULT){
 												characteristicActive.setValue(0);
 												characteristicInUse.setValue(0);
