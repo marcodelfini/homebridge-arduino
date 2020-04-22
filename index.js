@@ -372,16 +372,16 @@ arduino.prototype.getServices = function () {
 							functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(0);
 							functionService.getCharacteristic(Characteristic.Active).updateValue(0);
 							clearTimeout(this.inTimer); // clear the timer if it was used!
-							this.log("[TuyaAccessory] Water Valve is OFF!");
+							this.log("Water Valve is OFF!");
 							break;
 						case 1:
 							this.ValveLastActivation = (new Date()).getTime();
 							functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(this.duration);
 							functionService.getCharacteristic(Characteristic.Active).updateValue(1);
-							this.log("[TuyaAccessory] Water Valve Turning ON with Timer Set to: "+  this.duration/60 + " Minutes");
-							clearTimeout(this.timer); // clear any existing timer
+							this.log("Water Valve Turning ON with Timer Set to: "+  this.duration/60 + " Minutes");
+							clearTimeout(this.inTimer); // clear any existing timer
 							this.inTimer = setTimeout(()=> {
-								this.log("[TuyaAccessory] Water Valve Timer Expired. Shutting OFF Valve");
+								this.log("Water Valve Timer Expired. Shutting OFF Valve");
 								// use 'setvalue' when the timer ends so it triggers the .on('set'...) event
 								functionService.getCharacteristic(Characteristic.Active).setValue(0);
 								functionService.getCharacteristic(Characteristic.InUse).updateValue(0); 
@@ -392,34 +392,27 @@ arduino.prototype.getServices = function () {
 				});
 			
 			// If Homebridge crash when valve is on the timer reset
-			if (characteristicActive.value) {
+			if (characteristicActive.value == true) {
 				this.ValveLastActivation = (new Date()).getTime();
 				functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(this.duration);
 				functionService.getCharacteristic(Characteristic.Active).updateValue(1);
 				functionService.getCharacteristic(Characteristic.InUse).updateValue(1); 
-				this.log("[TuyaAccessory] Water Valve is ON After Restart. Setting Timer to: "+  this.duration/60 + " Minutes");	
-				clearTimeout(this.timer); // clear any existing timer
+				this.log("Water Valve is ON After Restart. Setting Timer to: "+  this.duration/60 + " Minutes");	
+				clearTimeout(this.inTimer); // clear any existing timer
 				this.inTimer = setTimeout(()=> {
-					this.log("[TuyaAccessory] Water Valve Timer Expired. Shutting OFF Valve");
+					this.log("Water Valve Timer Expired. Shutting OFF Valve");
 					// use 'setvalue' when the timer ends so it triggers the .on('set'...) event
 					functionService.getCharacteristic(Characteristic.Active).setValue(0); 
 					this.ValveLastActivation = null;
-				}, (this.duration *1000));
+				}, (this.duration*1000));
+			// else when resetart set all to inactive
+			}else{
+				this.ValveLastActivation = null;
+				characteristicInUse.setValue(false);
+				functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(0);
+				clearTimeout(this.inTimer);
 			}
 		}
-		
-		functionService.getCharacteristic(Characteristic.Active).on('change', changes => {
-			if (characteristicActive.value !== changes.newValue) characteristicActive.updateValue(changes.newValue);
-			if (characteristicInUse.value !== changes.newValue) characteristicInUse.setValue(changes.newValue);
-
-			if (this.optionalCharac1 == true) {
-				if (changes.newValue == false){
-					this.ValveLastActivation = null;
-					functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(0);
-					clearTimeout(this.inTimer);
-				}
-			}
-		});
 	}else{ // Switch (0)
 		var functionService = new Service.Switch(this.Name);
 		functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState);
