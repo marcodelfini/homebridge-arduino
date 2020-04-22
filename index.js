@@ -341,7 +341,7 @@ arduino.prototype.getServices = function () {
 													}, (this.duration*1000));
 												}
 											}
-										}
+										});
 		
 		functionService.getCharacteristic(Characteristic.InUse)
 							.on('get', (next) => {
