@@ -309,7 +309,6 @@ arduino.prototype.getServices = function () {
 	}else if(this.AccessoryType == 12){ // Valve
 		var functionService = new Service.Valve(this.Name);
 		// 0 GENERIC, 1 IRRIGATION/SPRINKLER, 2 SHOWER_HEAD, 3 WATER_FAUCET
-		this.log(this.ValveType);
 		if(this.ValveType == 1){
 			functionService.getCharacteristic(Characteristic.ValveType).updateValue(Characteristic.ValveType.IRRIGATION);
 		}else if(this.ValveType == 2){
@@ -345,10 +344,10 @@ arduino.prototype.getServices = function () {
 						clearTimeout(this.inTimer); // clear any existing timer
 						this.inTimer = setTimeout( ()=> {
 							this.log("Water Valve Timer Expired. Shutting OFF Valve");
-							functionService.getCharacteristic(Characteristic.Active).setValue(0); 
-							functionService.getCharacteristic(Characteristic.InUse).updateValue(0); 
+							functionService.getCharacteristic(Characteristic.Active).setValue(0);
+							functionService.getCharacteristic(Characteristic.InUse).updateValue(0);
 							this.ValveLastActivation = null;
-						}, (data.newValue *1000));	
+						}, (data.newValue *1000));
 					}
 				});
 			
@@ -381,19 +380,20 @@ arduino.prototype.getServices = function () {
 								this.log("Water Valve Timer Expired. Shutting OFF Valve");
 								// use 'setvalue' when the timer ends so it triggers the .on('set'...) event
 								functionService.getCharacteristic(Characteristic.Active).setValue(0);
-								functionService.getCharacteristic(Characteristic.InUse).updateValue(0); 
+								functionService.getCharacteristic(Characteristic.InUse).updateValue(0);
 								this.ValveLastActivation = null;
 							}, (this.duration*1000));
 							break;
 						}
 				});
+			
 			this.log("active: "+characteristicActive.value);
 			// If Homebridge crash when valve is on the timer reset
 			if (characteristicActive.value == true) {
 				this.ValveLastActivation = (new Date()).getTime();
 				functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(this.duration);
 				functionService.getCharacteristic(Characteristic.Active).updateValue(1);
-				functionService.getCharacteristic(Characteristic.InUse).updateValue(1); 
+				functionService.getCharacteristic(Characteristic.InUse).updateValue(1);
 				this.log("Water Valve is ON After Restart. Setting Timer to: "+  this.duration/60 + " Minutes");	
 				clearTimeout(this.inTimer); // clear any existing timer
 				this.inTimer = setTimeout(()=> {
@@ -415,8 +415,6 @@ arduino.prototype.getServices = function () {
 			}
 		}
 		
-
-
 		const characteristicStatusFault = functionService.getCharacteristic(Characteristic.StatusFault)
 											.on("get", this.getValveStatusFault.bind(this));
 								
