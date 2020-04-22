@@ -329,7 +329,7 @@ arduino.prototype.getServices = function () {
 												functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(0);
 												this.ValveLastActivation = null;
 												clearTimeout(this.inTimer);
-											}lese{
+											}else{
 												this.setValveActive.bind(next);
 											}
 										});
