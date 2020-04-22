@@ -425,6 +425,7 @@ arduino.prototype.getServices = function () {
 									characteristicStatusFault.getValue();
 									this.log("update characteristicStatusFault "+characteristicStatusFault.value + " "+ Characteristic.StatusFault.GENERAL_FAULT);
 									if(characteristicStatusFault.value == Characteristic.StatusFault.GENERAL_FAULT){
+										this.log("HTTP StatusFault inside");
 										characteristicActive.setValue(0);
 										characteristicInUse.setValue(0);
 										if(this.optionalCharac1 == true){
@@ -615,14 +616,17 @@ arduino.prototype.setTemperatureDisplayUnits = function (newVal) {
 
 // Valve
 arduino.prototype.getValveActive = function (next) {
+	this.log("HTTP getValveActive");
 	this._makeRequest("?getValveActive" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
 };
 
 arduino.prototype.setValveActive = function (newVal, next) {
+	this.log("HTTP setValveActive");
 	this._makeRequest("?setValveActive=" + newVal + "&auth=" + this.auth + "&uuid=" + this.uuid, next);
 };
 
 arduino.prototype.getValveStatusFault = function (next) {
+	this.log("HTTP getValveStatusFault");
 	this._makeRequest("?getValveStatusFault" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
 };
 
