@@ -171,28 +171,28 @@
 				"type": "boolean",
 				"default": false,
 				"required": false,
-				"description": "Optional Characteristics 1:<br><br>LIGHTBULB: Brightness.\nFAN: RotationDirection.\nTHERMOSTAT: deactive is Celsius (default), active is Fahrenheit.\nVALVE: active duretion timer (default not), see also duretion setting."
+				"description": "Optional Characteristics 1:<br><br>LIGHTBULB: Brightness.<br>FAN: RotationDirection.<br>THERMOSTAT: deactive is Celsius (default), active is Fahrenheit.<br>VALVE: active duretion timer (default not), see also duretion setting."
 			},
 			"optional-charac2": {
 				"title": "Optional Characteristics 2",
 				"type": "boolean",
 				"default": false,
 				"required": false,
-				"description": "Optional Characteristics 2:\n\nLIGHTBULB: Hue.\nFAN: RotationSpeed."
+				"description": "Optional Characteristics 2:<br><br>LIGHTBULB: Hue.<br>FAN: RotationSpeed."
 			},
 			"optional-charac3": {
 				"title": "Optional Characteristics 3",
 				"type": "boolean",
 				"default": false,
 				"required": false,
-				"description": "Optional Characteristics 3:\n\nLIGHTBULB: Saturation."
+				"description": "Optional Characteristics 3:<br><br>LIGHTBULB: Saturation."
 			},
 			"optional-charac4": {
 				"title": "Optional Characteristics 4",
 				"type": "boolean",
 				"default": false,
 				"required": false,
-				"description": "Optional Characteristics 4:\n\nLIGHTBULB: ColorTemperature."
+				"description": "Optional Characteristics 4:<br><br>LIGHTBULB: ColorTemperature."
 			},
 			"auth": {
 				"title": "Auth Token",
@@ -230,7 +230,7 @@
 				"placeholder": "0",
 				"default": 0,
 				"required": false,
-				"description": "Time in second (default is 0 not active):\n\nSWITCH: time to Toggle State (becomes a button).\nVALVE: time for Active State (opened), if this not setted (> 0) the active duretion timer (Optional Characteristics 1 flagged) not work."
+				"description": "Time in second (default is 0 not active):<br><br>SWITCH: time to Toggle State (becomes a button).<br>VALVE: time for Active State (opened), if this not setted (> 0) the active duretion timer (Optional Characteristics 1 flagged) not work."
 			},
 			"default-state": {
 				"title": "Default State",
