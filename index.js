@@ -380,8 +380,9 @@ arduino.prototype.getServices = function () {
 											.on("get", this.getValveStatusFault.bind(this));
 								
 		// if Homebridge crash when valve is on reset all to inactive
-		this.log("--> "+functionService.getCharacteristic(Characteristic.Active).value);
-		if (functionService.getCharacteristic(Characteristic.Active).value == Characteristic.Active.ACTIVE && this.optionalCharac1 == true && this.duration > 0) {
+		characteristicActive.getValue();
+		this.log("--> "+characteristicActive.value);
+		if (characteristicActive.value == Characteristic.Active.ACTIVE && this.optionalCharac1 == true && this.duration > 0) {
 			this.ValveEndActivation = null;
 			functionService.setCharacteristic(Characteristic.RemainingDuration, 0);
 			functionService.getCharacteristic(Characteristic.Active).updateValue(0);
