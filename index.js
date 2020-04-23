@@ -327,7 +327,7 @@ arduino.prototype.getServices = function () {
 												if(this.optionalCharac1 == true){
 													this.ValveEndActivation = this.duration + Math.floor(new Date().getTime() / 1000);
 													functionService.setCharacteristic(Characteristic.RemainingDuration, this.duration);
-													this.setValveActive(newValue);
+													this.setValveActive(newValue, next);
 													const self = this;
 													setTimeout(function() {
 														self.ValveEndActivation = null;
@@ -338,7 +338,7 @@ arduino.prototype.getServices = function () {
 													}, (this.duration*1000));
 												}
 											}else{
-												this.setValveActive(newValue);
+												this.setValveActive(newValue, next);
 												functionService.setCharacteristic(Characteristic.InUse, 0);
 												if(this.optionalCharac1 == true){
 													this.ValveEndActivation = null;
