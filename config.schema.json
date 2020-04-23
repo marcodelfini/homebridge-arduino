@@ -171,28 +171,28 @@
 				"type": "boolean",
 				"default": false,
 				"required": false,
-				"description": "Optional Characteristics 1: LIGHTBULB: Brightness, FAN: RotationDirection, THERMOSTAT: Celsius Deactive (default), Fahrenheit Active, VALVE: active duretion timer (default not)."
+				"description": "Optional Characteristics 1:\n\nLIGHTBULB: Brightness.\nFAN: RotationDirection.\nTHERMOSTAT: deactive is Celsius (default), active is Fahrenheit.\nVALVE: active duretion timer (default not), see also duretion setting."
 			},
 			"optional-charac2": {
 				"title": "Optional Characteristics 2",
 				"type": "boolean",
 				"default": false,
 				"required": false,
-				"description": "Optional Characteristics 2: LIGHTBULB: Hue, FAN: RotationSpeed."
+				"description": "Optional Characteristics 2:\n\nLIGHTBULB: Hue.\nFAN: RotationSpeed."
 			},
 			"optional-charac3": {
 				"title": "Optional Characteristics 3",
 				"type": "boolean",
 				"default": false,
 				"required": false,
-				"description": "Optional Characteristics 3: LIGHTBULB: Saturation."
+				"description": "Optional Characteristics 3:\n\nLIGHTBULB: Saturation."
 			},
 			"optional-charac4": {
 				"title": "Optional Characteristics 4",
 				"type": "boolean",
 				"default": false,
 				"required": false,
-				"description": "Optional Characteristics 4: LIGHTBULB: ColorTemperature."
+				"description": "Optional Characteristics 4:\n\nLIGHTBULB: ColorTemperature."
 			},
 			"auth": {
 				"title": "Auth Token",
@@ -230,7 +230,7 @@
 				"placeholder": "0",
 				"default": 0,
 				"required": false,
-				"description": "Time in second (default is 0 not active): SWITCH: time to Toggle State (becomes a button)."
+				"description": "Time in second (default is 0 not active):\n\nSWITCH: time to Toggle State (becomes a button).\nVALVE: time for Active State (opened), if this not setted (> 0) the active duretion timer (Optional Characteristics 1 flagged) not work."
 			},
 			"default-state": {
 				"title": "Default State",
@@ -266,14 +266,6 @@
 				],
 				"required": false,
 				"description": "Three different levels: 0: logging disabled, 1: logs only HTTP errors (default), 2: logs each HTTP response."
-			},
-			"disable-accessory": {
-				"title": "Disable this Accessory",
-				"type": "boolean",
-				"placeholder": false,
-				"default": false,
-				"required": false,
-				"description": "The accessory is enabled (Default false)."
 			}
 		}
 	}
