@@ -322,7 +322,7 @@ arduino.prototype.getServices = function () {
 		const characteristicActive = functionService.getCharacteristic(Characteristic.Active)
 										.on("get", this.getValveActive.bind(this))
 										.on("set", (newValue, next) => {
-											if(characteristicStatusFault.value != Characteristic.StatusFault.GENERAL_FAULT){
+											if(characteristicStatusFault.value == Characteristic.StatusFault.NO_FAULT){
 												if(newValue == "1"){
 													functionService.setCharacteristic(Characteristic.InUse, 1);
 													if(this.optionalCharac1 == true){
@@ -347,8 +347,6 @@ arduino.prototype.getServices = function () {
 													}
 												}
 											}else{
-												functionService.getCharacteristic(Characteristic.Active).updateValue(0);
-												functionService.setCharacteristic(Characteristic.InUse, 0);
 												next(null, Characteristic.Active.INACTIVE);
 											}
 										});
@@ -361,10 +359,12 @@ arduino.prototype.getServices = function () {
 		if(this.optionalCharac1 == true){
 			
 			functionService.getCharacteristic(Characteristic.SetDuration)
-					.on('get', this.getValveSetDuration.bind(this))
+					.on('get', (newValue, next) => {
+						next(null, this.duration);
+					})
 					.on('set', (newValue, next) => {
 						this.duration = newValue;
-						this.setValveSetDuration(newValue, next);
+						next(null, this.duration);
 					});
 			
 			functionService.getCharacteristic(Characteristic.RemainingDuration)
@@ -586,14 +586,6 @@ arduino.prototype.getValveStatusFault = function (next) {
 	this._makeRequest("?getValveStatusFault" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
 };
 
-arduino.prototype.getValveSetDuration = function (next) {
-	this._makeRequest("?getValveSetDuration" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
-};
-
-arduino.prototype.setValveSetDuration = function (newVal, next) {
-	this._makeRequest("?setValveSetDuration=" + newVal + "&auth=" + this.auth + "&uuid=" + this.uuid, next);
-};
-
 
 
 
@@ -732,9 +724,6 @@ arduino.prototype._responseHandler = function (res, next) {
 				}else{
 					next(null, Characteristic.StatusFault.NO_FAULT);
 				}
-			} else if (typeof jsonBody.ValveSetDuration !== 'undefined') {
-				this.duration = jsonBody.ValveSetDuration;
-				next(null, jsonBody.ValveSetDuration);
 			// Error
 			} else {
 				this.log("nothing body: "+body);
