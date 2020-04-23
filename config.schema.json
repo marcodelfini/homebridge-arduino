@@ -163,7 +163,7 @@
 						]
 					}
 				],
-				"required": false,
+				"required": true,
 				"description": "Only for Valve accessory type"
 			},
 			"optional-charac1": {
