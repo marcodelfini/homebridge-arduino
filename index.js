@@ -352,12 +352,11 @@ arduino.prototype.getServices = function () {
 										});
 		
 		const characteristicInUse = functionService.getCharacteristic(Characteristic.InUse)
-							.on('get', (next) => {
-								next(null, characteristicActive.value);
-							});
+										.on('get', (next) => {
+											next(null, characteristicActive.value);
+										});
 
 		if(this.optionalCharac1 == true && this.duration > 0){
-			
 			functionService.getCharacteristic(Characteristic.SetDuration)
 					.on('get', (next) => {
 						next(null, this.duration);
@@ -380,19 +379,19 @@ arduino.prototype.getServices = function () {
 		const characteristicStatusFault = functionService.getCharacteristic(Characteristic.StatusFault)
 											.on("get", this.getValveStatusFault.bind(this));
 								
-								setInterval(()=> {
-									// use 'getvalue' when the timer ends so it triggers the .on('get'...) event
-									characteristicStatusFault.getValue();
-									//this.log("update characteristicStatusFault "+characteristicStatusFault.value + " "+ Characteristic.StatusFault.GENERAL_FAULT);
-									if(characteristicStatusFault.value == Characteristic.StatusFault.GENERAL_FAULT){
-										characteristicActive.setValue(0);
-										characteristicInUse.setValue(0);
-										if(this.optionalCharac1 == true && this.duration > 0){
-											this.ValveEndActivation = null;
-											functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(0);
-										}
-									}
-								}, (5*1000));
+		setInterval(()=> {
+				// use 'getvalue' when the timer ends so it triggers the .on('get'...) event
+				characteristicStatusFault.getValue();
+				//this.log("update characteristicStatusFault "+characteristicStatusFault.value + " "+ Characteristic.StatusFault.GENERAL_FAULT);
+				if(characteristicStatusFault.value == Characteristic.StatusFault.GENERAL_FAULT){
+					characteristicActive.setValue(0);
+					characteristicInUse.setValue(0);
+					if(this.optionalCharac1 == true && this.duration > 0){
+						this.ValveEndActivation = null;
+						functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(0);
+					}
+				}
+			}, (5*1000));
 								
 		// if Homebridge crash when valve is on reset all to inactive
 		this.log("--> "+characteristicActive.value);
