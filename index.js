@@ -355,9 +355,11 @@ arduino.prototype.getServices = function () {
 		if(this.optionalCharac1 == true){
 			
 			functionService.getCharacteristic(Characteristic.SetDuration)
+					.on('get', this.getValveSetDuration.bind(this))
 					.on('set', (newValue, next) => {
 						this.duration = newValue;
-						next(null, this.duration);
+						this.setValveSetDuration(newValue, next);
+						//next(null, this.duration);
 					});
 			
 			functionService.getCharacteristic(Characteristic.RemainingDuration)
@@ -569,18 +571,23 @@ arduino.prototype.setTemperatureDisplayUnits = function (newVal) {
 
 // Valve
 arduino.prototype.getValveActive = function (next) {
-	this.log("HTTP getValveActive");
 	this._makeRequest("?getValveActive" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
 };
 
 arduino.prototype.setValveActive = function (newVal, next) {
-	this.log("HTTP setValveActive");
 	this._makeRequest("?setValveActive=" + newVal + "&auth=" + this.auth + "&uuid=" + this.uuid, next);
 };
 
 arduino.prototype.getValveStatusFault = function (next) {
-	this.log("HTTP getValveStatusFault");
 	this._makeRequest("?getValveStatusFault" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+};
+
+arduino.prototype.getValveSetDuration = function (next) {
+	this._makeRequest("?getValveSetDuration" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+};
+
+arduino.prototype.setValveSetDuration = function (newVal, next) {
+	this._makeRequest("?setValveSetDuration=" + newVal + "&auth=" + this.auth + "&uuid=" + this.uuid, next);
 };
 
 
@@ -721,6 +728,9 @@ arduino.prototype._responseHandler = function (res, next) {
 				}else{
 					next(null, Characteristic.StatusFault.NO_FAULT);
 				}
+			} else if (typeof jsonBody.ValveSetDuration !== 'undefined') {
+				this.duration = jsonBody.ValveSetDuration;
+				next(null, jsonBody.ValveSetDuration);
 			// Error
 			} else {
 				this.log("nothing body: "+body);
