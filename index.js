@@ -349,6 +349,7 @@ arduino.prototype.getServices = function () {
 											}else{
 												functionService.getCharacteristic(Characteristic.Active).updateValue(0);
 												functionService.setCharacteristic(Characteristic.InUse, 0);
+												next(null, Characteristic.Active.INACTIVE);
 											}
 										});
 		
