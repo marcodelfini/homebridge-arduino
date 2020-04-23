@@ -34,6 +34,7 @@ function arduino(log, config) {
 	9	MotionSensor
 	10	LeakSensor
 	11	Thermostat
+	12	Valve
 	*/
 	if (typeof config["accessory-type"] === "undefined") {
 		this.AccessoryType = 0;

@@ -171,7 +171,7 @@
 				"type": "boolean",
 				"default": false,
 				"required": false,
-				"description": "Optional Characteristics 1:\n\nLIGHTBULB: Brightness.\nFAN: RotationDirection.\nTHERMOSTAT: deactive is Celsius (default), active is Fahrenheit.\nVALVE: active duretion timer (default not), see also duretion setting."
+				"description": "Optional Characteristics 1:<br><br>LIGHTBULB: Brightness.\nFAN: RotationDirection.\nTHERMOSTAT: deactive is Celsius (default), active is Fahrenheit.\nVALVE: active duretion timer (default not), see also duretion setting."
 			},
 			"optional-charac2": {
 				"title": "Optional Characteristics 2",
