@@ -130,7 +130,7 @@
 					}
 				],
 				"required": true,
-				"description": "Types of Accessory: 0 Switch (default), 1 Lightbulb, 2 Outlet, 3 GarageDoorOpener, 4 Realy, 5 Fan, 6 TemperatureSensor, 7 Light Sensor, 8 Lock Mechanism, 9 Motion Sensor, 10 Leak Sensor, 11 Thermostat."
+				"description": "Types of Accessory: 0 Switch (default), 1 Lightbulb, 2 Outlet, 3 GarageDoorOpener, 4 Realy, 5 Fan, 6 TemperatureSensor, 7 Light Sensor, 8 Lock Mechanism, 9 Motion Sensor, 10 Leak Sensor, 11 Thermostat, 12 Valve"
 			},
 			"valve-type": {
 				"title": "Valve Type",
@@ -164,41 +164,41 @@
 					}
 				],
 				"required": false,
-				"description": "Only for Valve accessory type."
+				"description": "Only for Valve accessory type"
 			},
 			"optional-charac1": {
 				"title": "Optional Characteristics 1",
 				"type": "boolean",
 				"default": false,
 				"required": false,
-				"description": "Optional Characteristics 1:<br>- LIGHTBULB: Brightness.<br>- FAN: RotationDirection.<br>- THERMOSTAT: deactive is Celsius (default), active is Fahrenheit.<br>- VALVE: active duretion timer (default not), see also duretion setting.<br>"
+				"description": "Optional Characteristics 1:<br>- LIGHTBULB: Brightness<br>- FAN: RotationDirection<br>- THERMOSTAT: deactive is Celsius (default), active is Fahrenheit<br>- VALVE: active duretion timer (default not), see also duretion setting<br>"
 			},
 			"optional-charac2": {
 				"title": "Optional Characteristics 2",
 				"type": "boolean",
 				"default": false,
 				"required": false,
-				"description": "Optional Characteristics 2:<br>- LIGHTBULB: Hue.<br>- FAN: RotationSpeed.<br>"
+				"description": "Optional Characteristics 2:<br>- LIGHTBULB: Hue<br>- FAN: RotationSpeed<br>"
 			},
 			"optional-charac3": {
 				"title": "Optional Characteristics 3",
 				"type": "boolean",
 				"default": false,
 				"required": false,
-				"description": "Optional Characteristics 3:<br>- LIGHTBULB: Saturation.<br>"
+				"description": "Optional Characteristics 3:<br>- LIGHTBULB: Saturation<br>"
 			},
 			"optional-charac4": {
 				"title": "Optional Characteristics 4",
 				"type": "boolean",
 				"default": false,
 				"required": false,
-				"description": "Optional Characteristics 4:<br>- LIGHTBULB: ColorTemperature.<br>"
+				"description": "Optional Characteristics 4:<br>- LIGHTBULB: ColorTemperature<br>"
 			},
 			"auth": {
 				"title": "Auth Token",
 				"type": "string",
 				"required": false,
-				"description": "Auth token."
+				"description": "Auth token"
 			},
 			"host": {
 				"title": "Host",
@@ -206,7 +206,7 @@
 				"placeholder": "127.0.0.1",
 				"default": "127.0.0.1",
 				"required": false,
-				"description": "Arduino host, default is 127.0.0.1 (NO add http:// before, only the ip or domain name)."
+				"description": "Arduino host, default is 127.0.0.1 (NO add http:// before, only the ip or domain name)"
 			},
 			"base-url": {
 				"title": "Base Url",
@@ -214,7 +214,7 @@
 				"placeholder": "/",
 				"default": "/",
 				"required": false,
-				"description": "Base URL, default is / (Example: \"/data/index.php\")."
+				"description": "Base URL, default is / (Example: \"/data/index.php\")"
 			},
 			"port": {
 				"title": "Port",
@@ -222,7 +222,7 @@
 				"placeholder": "80",
 				"default": 80,
 				"required": false,
-				"description": "Arduino Web port, default is 80."
+				"description": "Arduino Web port, default is 80"
 			},
 			"duration": {
 				"title": "Duration",
@@ -230,14 +230,14 @@
 				"placeholder": "0",
 				"default": 0,
 				"required": false,
-				"description": "Time in second (default is 0 not active):<br>- SWITCH: time to Toggle State (becomes a button).<br>- VALVE: time for Active State (opened), if this not setted (> 0) the active duretion timer (Optional Characteristics 1 flagged) not work.<br>"
+				"description": "Time in second (default is 0 not active):<br>- SWITCH: time to Toggle State (becomes a button)<br>- VALVE: time for Active State (opened), if this not setted (> 0) the active duretion timer (Optional Characteristics 1 flagged) not work<br>"
 			},
 			"default-state": {
 				"title": "Default State",
 				"type": "boolean",
 				"placeholder": false,
 				"default": false,
-				"description": "Default State (begin state, or return state if duration is setted)."
+				"description": "Default State (begin state, or return state if duration is setted)"
 			},
 			"logLevel": {
 				"title": "Loging level",
@@ -265,7 +265,7 @@
 					}
 				],
 				"required": false,
-				"description": "Three different levels:<br> 0: logging disabled<br> 1: logs only HTTP errors (default)<br> 2: logs each HTTP response.<br>"
+				"description": "Three different levels:<br> 0: logging disabled<br> 1: logs only HTTP errors (default)<br> 2: logs each HTTP response<br>"
 			}
 		}
 	}
