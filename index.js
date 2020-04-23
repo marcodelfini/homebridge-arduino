@@ -333,7 +333,7 @@ arduino.prototype.getServices = function () {
 														self.ValveEndActivation = null;
 														functionService.setCharacteristic(Characteristic.RemainingDuration, 0);
 														functionService.getCharacteristic(Characteristic.Active).updateValue(0);
-														self.setValveActive(0);
+														self.setValveActive(Characteristic.Active.INACTIVE, next);
 														functionService.setCharacteristic(Characteristic.InUse, 0);
 													}, (this.duration*1000));
 												}
