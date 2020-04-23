@@ -359,7 +359,7 @@ arduino.prototype.getServices = function () {
 		if(this.optionalCharac1 == true){
 			
 			functionService.getCharacteristic(Characteristic.SetDuration)
-					.on('get', (newValue, next) => {
+					.on('get', (next) => {
 						next(null, this.duration);
 					})
 					.on('set', (newValue, next) => {
