@@ -323,29 +323,32 @@ arduino.prototype.getServices = function () {
 										.on("get", this.getValveActive.bind(this))
 										.on("set", (newValue, next) => {
 											if(characteristicStatusFault.value != Characteristic.StatusFault.GENERAL_FAULT){
-											if(newValue == "1"){
-												functionService.setCharacteristic(Characteristic.InUse, 1);
-												if(this.optionalCharac1 == true){
-													this.ValveEndActivation = this.duration + Math.floor(new Date().getTime() / 1000);
-													functionService.setCharacteristic(Characteristic.RemainingDuration, this.duration);
+												if(newValue == "1"){
+													functionService.setCharacteristic(Characteristic.InUse, 1);
+													if(this.optionalCharac1 == true){
+														this.ValveEndActivation = this.duration + Math.floor(new Date().getTime() / 1000);
+														functionService.setCharacteristic(Characteristic.RemainingDuration, this.duration);
+														this.setValveActive(newValue, next);
+														const self = this;
+														setTimeout(function() {
+															self.ValveEndActivation = null;
+															functionService.setCharacteristic(Characteristic.RemainingDuration, 0);
+															functionService.getCharacteristic(Characteristic.Active).updateValue(0);
+															self.setValveActive(Characteristic.Active.INACTIVE, null);
+															functionService.setCharacteristic(Characteristic.InUse, 0);
+														}, (this.duration*1000));
+													}
+												}else{
 													this.setValveActive(newValue, next);
-													const self = this;
-													setTimeout(function() {
-														self.ValveEndActivation = null;
+													functionService.setCharacteristic(Characteristic.InUse, 0);
+													if(this.optionalCharac1 == true){
+														this.ValveEndActivation = null;
 														functionService.setCharacteristic(Characteristic.RemainingDuration, 0);
-														functionService.getCharacteristic(Characteristic.Active).updateValue(0);
-														self.setValveActive(Characteristic.Active.INACTIVE, null);
-														functionService.setCharacteristic(Characteristic.InUse, 0);
-													}, (this.duration*1000));
+													}
 												}
 											}else{
-												this.setValveActive(newValue, next);
+												functionService.getCharacteristic(Characteristic.Active).updateValue(0);
 												functionService.setCharacteristic(Characteristic.InUse, 0);
-												if(this.optionalCharac1 == true){
-													this.ValveEndActivation = null;
-													functionService.setCharacteristic(Characteristic.RemainingDuration, 0);
-												}
-											}
 											}
 										});
 		
