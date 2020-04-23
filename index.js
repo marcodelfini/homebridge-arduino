@@ -333,7 +333,7 @@ arduino.prototype.getServices = function () {
 														self.ValveEndActivation = null;
 														functionService.setCharacteristic(Characteristic.RemainingDuration, 0);
 														functionService.getCharacteristic(Characteristic.Active).updateValue(0);
-														self.setValveActive(Characteristic.Active.INACTIVE, next);
+														self.setValveActive(Characteristic.Active.INACTIVE, null);
 														functionService.setCharacteristic(Characteristic.InUse, 0);
 													}, (this.duration*1000));
 												}
@@ -702,9 +702,17 @@ arduino.prototype._responseHandler = function (res, next) {
 			// Valve
 			} else if (typeof jsonBody.ValveActive !== 'undefined') {
 				if(jsonBody.ValveActive == 1){
-					next(null, Characteristic.Active.ACTIVE);
+					if (typeof next === 'function') {
+						next(null, Characteristic.Active.ACTIVE);
+					}else{
+						this.functionService.getCharacteristic(Characteristic.Active).updateValue(Characteristic.Active.ACTIVE);
+					}
 				}else{
-					next(null, Characteristic.Active.INACTIVE);
+					if (typeof next === 'function') {
+						next(null, Characteristic.Active.INACTIVE);
+					}else{
+						this.functionService.getCharacteristic(Characteristic.Active).updateValue(Characteristic.Active.INACTIVE);
+					}
 				}
 			} else if (typeof jsonBody.ValveStatusFault !== 'undefined') {
 				// 0 NO_FAULT, 1 GENERAL_FAULT
@@ -716,7 +724,7 @@ arduino.prototype._responseHandler = function (res, next) {
 			// Error
 			} else {
 				this.log("nothing body: "+body);
-				if (typeof jsonBody.next === 'function') {
+				if (typeof next === 'function') {
 					next({});
 				}
 			}
