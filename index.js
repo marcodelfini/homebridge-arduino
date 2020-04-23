@@ -72,7 +72,7 @@ function arduino(log, config) {
 	
 	this.inTimer = false;
 	
-	this.ValveLastActivation = null;
+	this.ValveEndActivation = null;
 }
 
 arduino.prototype.getServices = function () {	
@@ -321,23 +321,26 @@ arduino.prototype.getServices = function () {
 		
 		const characteristicActive = functionService.getCharacteristic(Characteristic.Active)
 										.on("get", this.getValveActive.bind(this))
-										.on("set", this.setValveActive.bind(this))
-										.on('change', (data) => {
-											if(data.newValue == "1"){
+										.on("set", (newValue, next) => {
+											if(newValue == "1"){
 												functionService.setCharacteristic(Characteristic.InUse, 1);
 												if(this.optionalCharac1 == true){
-													this.ValveLastActivation = this.duration + Math.floor(new Date().getTime() / 1000);
+													this.ValveEndActivation = this.duration + Math.floor(new Date().getTime() / 1000);
+													functionService.setCharacteristic(Characteristic.RemainingDuration, this.duration);
+													this.setValveActive(newValue);
 													setTimeout(function() {
-														functionService.setCharacteristic(Characteristic.SetDuration, 0);
+														this.ValveEndActivation = null;
+														functionService.setCharacteristic(Characteristic.RemainingDuration, 0);
 														functionService.getCharacteristic(Characteristic.Active).updateValue(0);
+														this.setValveActive(0);
 														functionService.setCharacteristic(Characteristic.InUse, 0);
 													}, (this.duration*1000));
 												}
 											}else{
+												this.setValveActive(newValue);
 												functionService.setCharacteristic(Characteristic.InUse, 0);
 												if(this.optionalCharac1 == true){
-													this.ValveLastActivation = null;
-													functionService.setCharacteristic(Characteristic.SetDuration, this.duration);
+													this.ValveEndActivation = null;
 													functionService.setCharacteristic(Characteristic.RemainingDuration, 0);
 												}
 											}
@@ -358,7 +361,7 @@ arduino.prototype.getServices = function () {
 			
 			functionService.getCharacteristic(Characteristic.RemainingDuration)
 					.on('get', (next) => {
-						var remainingTime = this.duration - Math.floor(((new Date()).getTime() - this.ValveLastActivation) / 1000);
+						var remainingTime = this.duration - Math.floor(((new Date()).getTime() - this.ValveEndActivation) / 1000);
 						if (!remainingTime || remainingTime < 0) {
 							remainingTime = 0;
 						}
@@ -379,7 +382,7 @@ arduino.prototype.getServices = function () {
 										characteristicInUse.setValue(0);
 										if(this.optionalCharac1 == true){
 											functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(0);
-											this.ValveLastActivation = null;
+											this.ValveEndActivation = null;
 											clearTimeout(this.inTimer);
 										}
 									}
