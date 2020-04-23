@@ -178,21 +178,21 @@
 				"type": "boolean",
 				"default": false,
 				"required": false,
-				"description": "Optional Characteristics 2:<br><br>LIGHTBULB: Hue.<br>FAN: RotationSpeed."
+				"description": "Optional Characteristics 2:<br>- LIGHTBULB: Hue.<br>- FAN: RotationSpeed.<br>"
 			},
 			"optional-charac3": {
 				"title": "Optional Characteristics 3",
 				"type": "boolean",
 				"default": false,
 				"required": false,
-				"description": "Optional Characteristics 3:<br><br>LIGHTBULB: Saturation."
+				"description": "Optional Characteristics 3:<br>- LIGHTBULB: Saturation.<br>"
 			},
 			"optional-charac4": {
 				"title": "Optional Characteristics 4",
 				"type": "boolean",
 				"default": false,
 				"required": false,
-				"description": "Optional Characteristics 4:<br><br>LIGHTBULB: ColorTemperature."
+				"description": "Optional Characteristics 4:<br>- LIGHTBULB: ColorTemperature.<br>"
 			},
 			"auth": {
 				"title": "Auth Token",
@@ -265,7 +265,7 @@
 					}
 				],
 				"required": false,
-				"description": "Three different levels: 0: logging disabled, 1: logs only HTTP errors (default), 2: logs each HTTP response."
+				"description": "Three different levels:<br> 0: logging disabled<br> 1: logs only HTTP errors (default)<br> 2: logs each HTTP response.<br>"
 			}
 		}
 	}
