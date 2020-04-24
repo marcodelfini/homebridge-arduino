@@ -257,7 +257,7 @@
 				"type": "boolean",
 				"placeholder": false,
 				"default": false,
-				"description": "Default State (begin state, or return state if duration is setted)"
+				"description": "Default State (begin state, or return state if duration is setted)<br>valid for accessory type: Switch, Dummy Switch, Outlet, Lightbulb, Fan"
 			},
 			"logLevel": {
 				"title": "Loging level",
