@@ -87,7 +87,7 @@ function arduino(log, config) {
 			response.end();
 		}
 	}.bind(this));
-	var self = this;
+	const self = this;
 	this.requestServer.listen(this.ListeningPort, function() {
 		self.log("Server Listening at "+self.ListeningPort+" for accessory "+self.Name+" ...");
 	});
@@ -449,17 +449,17 @@ arduino.prototype.getServices = function () {
 		var functionService = new Service.Switch(this.Name);
 		var dummySwitch = functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState)
 			.on("get", (next) => {
-					this.log("DS g "+dummySwitch.value);
+					if (this.logLevel >= 2) { this.log("DummySwitch get "+dummySwitch.value); }
 					next(null, dummySwitch.value);
 			})
 			.on("set", (newValue, next) => {
-					this.log("DS s "+dummySwitch.value+" -> "+newValue);
+					if (this.logLevel >= 2) { this.log("DummySwitch set "+dummySwitch.value+" -> "+newValue); }
 					next(null, newValue);
 					if(newValue != this.defaultState && this.duration > 0){
 						const self = this;
 						setTimeout(function() {
 							dummySwitch.updateValue(this.defaultState);
-							self.log("DS sr "+newValue+" -> "+this.defaultState);
+							if (self.logLevel >= 2) { self.log("DummySwitch set return "+newValue+" -> "+this.defaultState); }
 						}, (this.duration*1000));
 					}
 			});

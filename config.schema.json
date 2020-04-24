@@ -250,7 +250,7 @@
 				"placeholder": "0",
 				"default": 0,
 				"required": false,
-				"description": "Time in second (default is 0):<br>- SWITCH: time to Toggle State (becomes a button)<br>- VALVE: time for remain Active State (opened), if this setted (> 0)<br>DUMMY SWITCH: time to Toggle State (becomes a button)<br>"
+				"description": "Time in second (default is 0):<br>- SWITCH: time to Toggle State (becomes a button)<br>- VALVE: time for remain Active State (opened), if this setted (> 0)<br>- DUMMY SWITCH: time to Toggle State (becomes a button)<br>"
 			},
 			"default-state": {
 				"title": "Default State",
