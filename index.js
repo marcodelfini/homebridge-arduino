@@ -440,6 +440,10 @@ arduino.prototype.getServices = function () {
 					}
 				}, (5*1000));
 		}
+	}else if(this.AccessoryType == 13){ // AirQualitySensor
+		var functionService = new Service.AirQualitySensor(this.Name);
+		functionService.getCharacteristic(Characteristic.AirQuality)
+			.on("get", this.getAirQuality.bind(this));
 	}else{ // Switch (0)
 		var functionService = new Service.Switch(this.Name);
 		functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState);
@@ -632,6 +636,11 @@ arduino.prototype.getValveStatusFault = function (next) {
 	this._makeRequest("?getValveStatusFault" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
 };
 
+// AirQuality Sensor
+arduino.prototype.getAirQuality = function (next) {
+	this._makeRequest("?getAirQuality" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+};
+
 
 
 
@@ -770,6 +779,9 @@ arduino.prototype._responseHandler = function (res, next) {
 				}else{
 					next(null, Characteristic.StatusFault.NO_FAULT);
 				}
+			// AirQuality Sensor
+			} else if (typeof jsonBody.AirQuality !== 'undefined') {
+				next(null, jsonBody.AirQuality);
 			// Error
 			} else {
 				this.log("nothing body: "+body);
