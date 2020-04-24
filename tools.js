@@ -1,5 +1,5 @@
 module.exports = {
-    loxoneToHomekitColorTemperature, homekitToLoxoneColorTemperature, rgbToHsl, rgbToHsv, colorTemperatureToRGB
+    loxoneToHomekitColorTemperature, homekitToLoxoneColorTemperature, rgbToHsl, rgbToHsv, colorTemperatureToRGB, kelvin2Mirek, mirek2Kelvin
 };
 
 function kelvin2Mirek(kelvin) {
@@ -8,7 +8,7 @@ function kelvin2Mirek(kelvin) {
 
 function mirek2Kelvin(mirek) {
 	return 1000000 / mirek;
-};
+}
 
 
 // transform Loxone color temperature (expressed in Kelvins 2700-6500k to Homekit values 140-500)
