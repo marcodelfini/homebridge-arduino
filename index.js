@@ -17,6 +17,8 @@ function arduino(log, config) {
 		this.logLevel = config["logLevel"];
 	}
 	
+	var this.AccTypeName = ["Switch", "Lightbulb", "Outlet", "GarageDoorOpener", "HumiditySensor", "Fan", "TemperatureSensor", "LightSensor", "LockMechanism", "MotionSensor", "LeakSensor", "Thermostat", "Valve", "AirQualitySensor", "DummySwitch"];
+	
 	/* AccessoryType
 	0	Switch
 	1	Lightbulb
@@ -31,6 +33,8 @@ function arduino(log, config) {
 	10	LeakSensor
 	11	Thermostat
 	12	Valve
+	13	AirQualitySensor
+	14	DummySwitch
 	*/
 	if (typeof config["accessory-type"] === "undefined") {
 		this.AccessoryType = 0;
@@ -64,7 +68,7 @@ function arduino(log, config) {
 	
 	this.uuid = UUIDGen.generate("uuid-hb-gen_"+this.Serial);
 	
-	this.log("lang: " + this.Lang + ", accessory type: " + this.AccessoryType);
+	this.log("lang: " + this.Lang + " accessory: " + this.AccTypeName[this.AccessoryType] + " (" + this.AccessoryType + ")");
 	this.log("uuid: " + this.uuid);
 	
 	this.inTimer = false;
@@ -89,7 +93,7 @@ function arduino(log, config) {
 	}.bind(this));
 	const self = this;
 	this.requestServer.listen(this.ListeningPort, function() {
-		self.log("Server Listening at "+self.ListeningPort+" for accessory "+self.Name+" ...");
+		self.log("Server Listening at "+self.ListeningPort+" ...");
 	});
 }
 
