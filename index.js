@@ -88,8 +88,8 @@ function arduino(log, config) {
 		}
 	}.bind(this));
 
-	this.requestServer.listen(this.ListeningPort, function() {
-		this.log("Server Listening at "+this.ListeningPort+" for accessory "+this.Name+" ...");
+	this.requestServer.listen(this.ListeningPort, function(self = this) {
+		self.log("Server Listening at "+this.ListeningPort+" for accessory "+this.Name+" ...");
 	});
 }
 
