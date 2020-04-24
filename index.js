@@ -448,7 +448,10 @@ arduino.prototype.getServices = function () {
 	}else if(this.AccessoryType == 14){ // Dummy Switch
 		var functionService = new Service.Switch(this.Name);
 		var dummySwitch = functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState)
-			.on("get", dummySwitch.value)
+			.on("get", (next) => {
+					this.log("DS g "+dummySwitch.value);
+					return dummySwitch.value;
+			})
 			.on("set", (newValue, next) => {
 					this.log("DS s "+dummySwitch.value+" -> "+newValue);
 					functionService.getCharacteristic(Characteristic.On).updateValue(newValue);
