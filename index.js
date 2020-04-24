@@ -447,14 +447,16 @@ arduino.prototype.getServices = function () {
 			.on("get", this.getAirQuality.bind(this));
 	}else if(this.AccessoryType == 14){ // Dummy Switch
 		var functionService = new Service.Switch(this.Name);
-		functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState);
+		var dummySwitch = functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState);
 		
 		functionService.getCharacteristic(Characteristic.On)
 			.on("get", (next) => {
-					return functionService.getCharacteristic(Characteristic.On).value;
+					this.log("DS g "+dummySwitch);
+					return dummySwitch.value;
 			})
 			.on("set", (newValue, next) => {
-					functionService.setCharacteristic(Characteristic.On, newValue);
+					this.log("DS s "+dummySwitch+" -> "+newValue);
+					dummySwitch.updateValue(newValue);
 			});
 	}else{ // Switch (0)
 		var functionService = new Service.Switch(this.Name);
