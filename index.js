@@ -93,7 +93,7 @@ function arduino(log, config) {
 	}.bind(this));
 	const self = this;
 	this.requestServer.listen(this.ListeningPort, function() {
-		self.log("Server Listening at "+self.ListeningPort+" ...");
+		self.log("Listening (http) at "+self.ListeningPort);
 	});
 }
 
