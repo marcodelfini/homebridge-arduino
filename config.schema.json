@@ -139,12 +139,18 @@
 					{
 						"title": "AirQuality Sensor (13)",
 						"enum": [
-							6
+							13
+						]
+					},
+					{
+						"title": "Dummy Switch (14)",
+						"enum": [
+							14
 						]
 					}
 				],
 				"required": true,
-				"description": "Types of Accessory: 0 Switch (default), 1 Lightbulb, 2 Outlet, 3 GarageDoorOpener, 4 Realy, 5 Fan, 6 Temperature Sensor, 7 Light Sensor, 8 Lock Mechanism, 9 Motion Sensor, 10 Leak Sensor, 11 Thermostat, 12 Valve, 13 AirQuality Sensor"
+				"description": "Types of Accessory: 0 Switch (default), 1 Lightbulb, 2 Outlet, 3 GarageDoorOpener, 4 Realy, 5 Fan, 6 Temperature Sensor, 7 Light Sensor, 8 Lock Mechanism, 9 Motion Sensor, 10 Leak Sensor, 11 Thermostat, 12 Valve, 13 AirQuality Sensor, 14 Dummy Switch"
 			},
 			"valve-type": {
 				"title": "Valve Type",

@@ -441,9 +441,21 @@ arduino.prototype.getServices = function () {
 				}, (5*1000));
 		}
 	}else if(this.AccessoryType == 13){ // AirQualitySensor
+		// 0 Unknown, 1 Excellent, 2 Good, 3 Fair, 4 Inferior, 5 Poor
 		var functionService = new Service.AirQualitySensor(this.Name);
 		functionService.getCharacteristic(Characteristic.AirQuality)
 			.on("get", this.getAirQuality.bind(this));
+	}else if(this.AccessoryType == 14){ // Dummy Switch
+		var functionService = new Service.Switch(this.Name);
+		functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState);
+		
+		functionService.getCharacteristic(Characteristic.On)
+			.on("get", (next) => {
+					return functionService.getCharacteristic(Characteristic.On).value;
+			})
+			.on("set", (newValue, next) => {
+					functionService.setCharacteristic(Characteristic.On, newValue);
+			});
 	}else{ // Switch (0)
 		var functionService = new Service.Switch(this.Name);
 		functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState);
@@ -781,6 +793,7 @@ arduino.prototype._responseHandler = function (res, next) {
 				}
 			// AirQuality Sensor
 			} else if (typeof jsonBody.AirQuality !== 'undefined') {
+				// 0 Unknown, 1 Excellent, 2 Good, 3 Fair, 4 Inferior, 5 Poor
 				next(null, jsonBody.AirQuality);
 			// Error
 			} else {
