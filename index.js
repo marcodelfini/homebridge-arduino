@@ -455,7 +455,7 @@ arduino.prototype.getServices = function () {
 					return dummySwitch.value;
 			})
 			.on("set", (newValue, next) => {
-					this.log("DS s "+dummySwitch+" -> "+newValue);
+					this.log("DS s "+dummySwitch.value+" -> "+newValue);
 					dummySwitch.updateValue(newValue);
 			});
 	}else{ // Switch (0)
