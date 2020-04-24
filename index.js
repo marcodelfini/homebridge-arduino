@@ -454,12 +454,12 @@ arduino.prototype.getServices = function () {
 			})
 			.on("set", (newValue, next) => {
 					this.log("DS s "+dummySwitch.value+" -> "+newValue);
-					dummySwitch.updateValue(newValue);
+					next(null, newValue);
 					if(newValue != this.defaultState && this.duration > 0){
 						const self = this;
 						setTimeout(function() {
 							dummySwitch.updateValue(this.defaultState);
-							this.log("DS sr "+newValue+" -> "+this.defaultState);
+							self.log("DS sr "+newValue+" -> "+this.defaultState);
 						}, (this.duration*1000));
 					}
 			});
