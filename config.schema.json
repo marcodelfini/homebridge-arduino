@@ -171,14 +171,14 @@
 				"type": "boolean",
 				"default": false,
 				"required": false,
-				"description": "Optional Characteristics 1:<br>- LIGHTBULB: Brightness<br>- FAN: RotationDirection<br>- THERMOSTAT: deactive is Celsius (default), active is Fahrenheit<br>- VALVE: active duretion timer (default not), see also duretion setting<br>"
+				"description": "Optional Characteristics 1:<br>- LIGHTBULB: Brightness<br>- FAN: RotationDirection<br>- THERMOSTAT: deactive is Celsius (default), active is Fahrenheit<br>- VALVE: Check Status Fault<br>"
 			},
 			"optional-charac2": {
 				"title": "Optional Characteristics 2",
 				"type": "boolean",
 				"default": false,
 				"required": false,
-				"description": "Optional Characteristics 2:<br>- LIGHTBULB: Hue<br>- FAN: RotationSpeed<br>- VALVE: Check Status Fault<br>"
+				"description": "Optional Characteristics 2:<br>- LIGHTBULB: Hue<br>- FAN: RotationSpeed<br>"
 			},
 			"optional-charac3": {
 				"title": "Optional Characteristics 3",
@@ -230,7 +230,7 @@
 				"placeholder": "0",
 				"default": 0,
 				"required": false,
-				"description": "Time in second (default is 0 not active):<br>- SWITCH: time to Toggle State (becomes a button)<br>- VALVE: time for Active State (opened), if this not setted (> 0) the active duretion timer (Optional Characteristics 1 flagged) not work<br>"
+				"description": "Time in second (default is 0):<br>- SWITCH: time to Toggle State (becomes a button)<br>- VALVE: time for remain Active State (opened), if this setted (> 0)<br>"
 			},
 			"default-state": {
 				"title": "Default State",

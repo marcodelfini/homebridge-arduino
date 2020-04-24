@@ -338,7 +338,7 @@ arduino.prototype.getServices = function () {
 											if(characteristicStatusFault.value == Characteristic.StatusFault.NO_FAULT){
 												if(newValue == "1"){
 													functionService.setCharacteristic(Characteristic.InUse, 1);
-													if(this.optionalCharac1 == true && this.duration > 0){
+													if(this.duration > 0){
 														this.ValveEndActivation = this.duration + Math.floor(new Date().getTime() / 1000);
 														functionService.setCharacteristic(Characteristic.RemainingDuration, this.duration);
 														this.setValveActive(newValue, next);
@@ -354,7 +354,7 @@ arduino.prototype.getServices = function () {
 												}else{
 													this.setValveActive(newValue, next);
 													functionService.setCharacteristic(Characteristic.InUse, 0);
-													if(this.optionalCharac1 == true && this.duration > 0){
+													if(this.duration > 0){
 														this.ValveEndActivation = null;
 														functionService.setCharacteristic(Characteristic.RemainingDuration, 0);
 													}
@@ -369,7 +369,7 @@ arduino.prototype.getServices = function () {
 											next(null, characteristicActive.value);
 										});
 
-		if(this.optionalCharac1 == true && this.duration > 0){
+		if(this.duration > 0){
 			functionService.getCharacteristic(Characteristic.SetDuration)
 					.on('get', (next) => {
 						next(null, this.duration);
@@ -391,7 +391,7 @@ arduino.prototype.getServices = function () {
 		
 		const characteristicStatusFault = functionService.getCharacteristic(Characteristic.StatusFault)
 											.on("get", (next) => {
-												if (this.optionalCharac2 == true){
+												if (this.optionalCharac1 == true){
 													this.getValveStatusFault(next);
 												}else{
 													return Characteristic.StatusFault.NO_FAULT;
@@ -399,7 +399,7 @@ arduino.prototype.getServices = function () {
 											});
 								
 		// if Homebridge crash when valve is on reset all to inactive
-		if (this.optionalCharac1 == true && this.duration > 0) {
+		if (this.duration > 0) {
 			this.ValveEndActivation = null;
 			functionService.setCharacteristic(Characteristic.RemainingDuration, 0);
 			functionService.getCharacteristic(Characteristic.Active).updateValue(0);
@@ -407,7 +407,7 @@ arduino.prototype.getServices = function () {
 			functionService.setCharacteristic(Characteristic.InUse, 0);
 		}
 		
-		if (this.optionalCharac2 == true){
+		if (this.optionalCharac1 == true){
 			setInterval(()=> {
 					// use 'getvalue' when the timer ends so it triggers the .on('get'...) event
 					characteristicStatusFault.getValue();
@@ -415,7 +415,7 @@ arduino.prototype.getServices = function () {
 					if(characteristicStatusFault.value == Characteristic.StatusFault.GENERAL_FAULT){
 						characteristicActive.setValue(0);
 						characteristicInUse.setValue(0);
-						if(this.optionalCharac1 == true && this.duration > 0){
+						if(this.duration > 0){
 							this.ValveEndActivation = null;
 							functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(0);
 						}
