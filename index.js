@@ -451,7 +451,7 @@ arduino.prototype.getServices = function () {
 		
 		functionService.getCharacteristic(Characteristic.On)
 			.on("get", (next) => {
-					this.log("DS g "+dummySwitch);
+					this.log("DS g "+dummySwitch.value);
 					return dummySwitch.value;
 			})
 			.on("set", (newValue, next) => {
