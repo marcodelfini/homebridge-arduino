@@ -390,7 +390,13 @@ arduino.prototype.getServices = function () {
 		}
 		
 		const characteristicStatusFault = functionService.getCharacteristic(Characteristic.StatusFault)
-											.on("get", this.getValveStatusFault.bind(this));
+											.on("get", (next) => {
+												if (this.optionalCharac2 == true){
+													this.getValveStatusFault(next);
+												}else{
+													return Characteristic.StatusFault.NO_FAULT;
+												}
+											});
 								
 		// if Homebridge crash when valve is on reset all to inactive
 		if (this.optionalCharac1 == true && this.duration > 0) {
@@ -400,20 +406,22 @@ arduino.prototype.getServices = function () {
 			this.setValveActive(Characteristic.Active.INACTIVE, null);
 			functionService.setCharacteristic(Characteristic.InUse, 0);
 		}
-
-		setInterval(()=> {
-				// use 'getvalue' when the timer ends so it triggers the .on('get'...) event
-				characteristicStatusFault.getValue();
-				//this.log("update characteristicStatusFault "+characteristicStatusFault.value + " "+ Characteristic.StatusFault.GENERAL_FAULT);
-				if(characteristicStatusFault.value == Characteristic.StatusFault.GENERAL_FAULT){
-					characteristicActive.setValue(0);
-					characteristicInUse.setValue(0);
-					if(this.optionalCharac1 == true && this.duration > 0){
-						this.ValveEndActivation = null;
-						functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(0);
+		
+		if (this.optionalCharac2 == true){
+			setInterval(()=> {
+					// use 'getvalue' when the timer ends so it triggers the .on('get'...) event
+					characteristicStatusFault.getValue();
+					//this.log("update characteristicStatusFault "+characteristicStatusFault.value + " "+ Characteristic.StatusFault.GENERAL_FAULT);
+					if(characteristicStatusFault.value == Characteristic.StatusFault.GENERAL_FAULT){
+						characteristicActive.setValue(0);
+						characteristicInUse.setValue(0);
+						if(this.optionalCharac1 == true && this.duration > 0){
+							this.ValveEndActivation = null;
+							functionService.getCharacteristic(Characteristic.RemainingDuration).updateValue(0);
+						}
 					}
-				}
-			}, (5*1000));
+				}, (5*1000));
+		}
 	}else{ // Switch (0)
 		var functionService = new Service.Switch(this.Name);
 		functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState);

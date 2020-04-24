@@ -178,7 +178,7 @@
 				"type": "boolean",
 				"default": false,
 				"required": false,
-				"description": "Optional Characteristics 2:<br>- LIGHTBULB: Hue<br>- FAN: RotationSpeed<br>"
+				"description": "Optional Characteristics 2:<br>- LIGHTBULB: Hue<br>- FAN: RotationSpeed<br>- VALVE: Check Status Fault<br>"
 			},
 			"optional-charac3": {
 				"title": "Optional Characteristics 3",
