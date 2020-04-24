@@ -1,6 +1,6 @@
 var Service, Characteristic, DoorState, UUIDGen;
 var http = require("http");
-
+var tools = require("./tools.js");
 
 function arduino(log, config) {
 	if (!config) {
@@ -146,7 +146,13 @@ arduino.prototype.getServices = function () {
 						minStep: 1
 					})
 				.on('get', this.getColorTemperature.bind(this))
-				.on('set', this.setColorTemperature.bind(this));
+				.on('set', (newValue, next) => {
+					var rgb = tools.colorTemperatureToRGB((newValue*1000000));
+					var hsv = tools.rgbToHsv(rgb.r, rgb.g, rgb.b);
+					functionService.setCharacteristic(Characteristic.Hue, parseInt(360 * hsv.h));
+					functionService.setCharacteristic(Characteristic.Saturation, parseInt(hsv.s * 100));
+					this.setColorTemperature(newValue, next);
+				});
 		}
 	}else if(this.AccessoryType == 2){ // Outlet
 		var functionService = new Service.Outlet(this.Name);
