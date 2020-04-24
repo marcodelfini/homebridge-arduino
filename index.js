@@ -17,7 +17,7 @@ function arduino(log, config) {
 		this.logLevel = config["logLevel"];
 	}
 	
-	var this.AccTypeName = ["Switch", "Lightbulb", "Outlet", "GarageDoorOpener", "HumiditySensor", "Fan", "TemperatureSensor", "LightSensor", "LockMechanism", "MotionSensor", "LeakSensor", "Thermostat", "Valve", "AirQualitySensor", "DummySwitch"];
+	this.AccTypeName = ["Switch", "Lightbulb", "Outlet", "GarageDoorOpener", "HumiditySensor", "Fan", "TemperatureSensor", "LightSensor", "LockMechanism", "MotionSensor", "LeakSensor", "Thermostat", "Valve", "AirQualitySensor", "DummySwitch"];
 	
 	/* AccessoryType
 	0	Switch
