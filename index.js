@@ -8,11 +8,7 @@ function arduino(log, config) {
 	}
 	
 	this.log = log;
-	this.DisableAccessory = config["disable-accessory"] || false;
-	if (this.DisableAccessory == true) {
-		this.log("Accessory disabled in configuration. It will not be added.");
-		return;
-	}
+	this.ListeningPort = config["listening-port"] || 18080;
 	
 	// logLevel 0: disabled, 1: error, 2: info
 	if (typeof config["logLevel"] === "undefined") {
@@ -74,6 +70,27 @@ function arduino(log, config) {
 	this.inTimer = false;
 	
 	this.ValveEndActivation = null;
+	
+	this.requestServer = http.createServer(function(request, response) {
+		if (request.url === "/add") {
+			response.writeHead(204);
+			response.end();
+		}
+
+		if (request.url == "/reachability") {
+			response.writeHead(204);
+			response.end();
+		}
+
+		if (request.url == "/remove") {
+			response.writeHead(204);
+			response.end();
+		}
+	}.bind(this));
+
+	this.requestServer.listen(this.ListeningPort, function() {
+		this.log("Server Listening at "+this.ListeningPort+" for accessory "+this.Name+" ...");
+	});
 }
 
 arduino.prototype.getServices = function () {	
@@ -82,7 +99,7 @@ arduino.prototype.getServices = function () {
 		.setCharacteristic(Characteristic.Model, this.Model)
 		.setCharacteristic(Characteristic.SerialNumber, this.Serial)
 		.setCharacteristic(Characteristic.FirmwareRevision, this.FirmwareRevision)
-        .setCharacteristic(Characteristic.HardwareRevision, this.HardwareRevision);
+		.setCharacteristic(Characteristic.HardwareRevision, this.HardwareRevision);
 	
 	if(this.AccessoryType == 1){ // Lightbulb
 		var functionService = new Service.Lightbulb(this.Name);
@@ -134,7 +151,8 @@ arduino.prototype.getServices = function () {
 				.on('get', this.getSaturation.bind(this))
 				.on('set', this.setSaturation.bind(this));
 		}
-		if(this.optionalCharac4 == true){ // ColorTemperature (unit -> int megaKelvin (MK-1) or mirek scale (= 1000000/Kelvin))
+		if(this.optionalCharac4 == true){
+			// ColorTemperature (unit -> int megaKelvin (MK-1) - mirek scale (= 1000000/Kelvin)) or kelvin (=1000000/mirek)
 			if(!functionService.getCharacteristic(Characteristic.ColorTemperature)) {
 				functionService.addCharacteristic(Characteristic.ColorTemperature);
 			}

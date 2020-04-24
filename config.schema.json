@@ -14,6 +14,14 @@
 				"default": "Arduino",
 				"description": "A unique name for the accessory. It will be used as the accessory name in HomeKit."
 			},
+			"listening-port": {
+				"title": "Listening Port",
+				"type": "integer",
+				"placeholder": "18080",
+				"default": 18080,
+				"required": true,
+				"description": "Unique port for HTTP listening server, each accessory must have it different.<br>possibile example: 18080, 18081, 18082, 18083, 18084, 18085, 18086, 18087, 18088, 18089"
+			},
 			"language": {
 				"type": "string",
 				"default": "enGB",
@@ -171,7 +179,7 @@
 				"type": "boolean",
 				"default": false,
 				"required": false,
-				"description": "Optional Characteristics 1:<br>- LIGHTBULB: Brightness<br>- FAN: RotationDirection<br>- THERMOSTAT: deactive is Celsius (default), active is Fahrenheit<br>- VALVE: Check Status Fault<br>"
+				"description": "Optional Characteristics 1:<br>- LIGHTBULB: Brightness<br>- FAN: RotationDirection<br>- THERMOSTAT: deactive is Celsius (default), active is Fahrenheit<br>- VALVE: Check Status Fault (every 5 sec and every operation)<br>"
 			},
 			"optional-charac2": {
 				"title": "Optional Characteristics 2",
