@@ -147,7 +147,7 @@ arduino.prototype.getServices = function () {
 					})
 				.on('get', this.getColorTemperature.bind(this))
 				.on('set', (newValue, next) => {
-					var rgb = tools.colorTemperatureToRGB((newValue*1000000));
+					var rgb = tools.colorTemperatureToRGB(tools.mirek2Kelvin(newValue));
 					var hsv = tools.rgbToHsv(rgb.r, rgb.g, rgb.b);
 					functionService.setCharacteristic(Characteristic.Hue, parseInt(360 * hsv.h));
 					functionService.setCharacteristic(Characteristic.Saturation, parseInt(hsv.s * 100));

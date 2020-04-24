@@ -2,15 +2,23 @@ module.exports = {
     loxoneToHomekitColorTemperature, homekitToLoxoneColorTemperature, rgbToHsl, rgbToHsv, colorTemperatureToRGB
 };
 
+function kelvin2Mirek(kelvin) {
+	return 1000000 / kelvin;
+};
+
+function mirek2Kelvin(mirek) {
+	return 1000000 / mirek;
+};
+
 
 // transform Loxone color temperature (expressed in Kelvins 2700-6500k to Homekit values 140-500)
 function loxoneToHomekitColorTemperature(ct, obj) {
 
-    var minCtLoxone = 2700;
-    var maxCtLoxone = 6500;
+    var minCtLoxone = 2500;
+    var maxCtLoxone = 20000;
 
-    var minCtHomekit = 153;
-    var maxCtHomekit = 500;
+    var minCtHomekit = 50;
+    var maxCtHomekit = 400;
 
     var percent = 1 - ((ct - minCtLoxone) / (maxCtLoxone - minCtLoxone));
     var newValue = Math.round(minCtHomekit + ((maxCtHomekit - minCtHomekit) * percent));
@@ -25,11 +33,11 @@ function loxoneToHomekitColorTemperature(ct, obj) {
 // transform Homekit color temperature (expressed 140-500 to Loxone values expressed in Kelvins 2700-6500k)
 function homekitToLoxoneColorTemperature(ct, obj) {
 
-    var minCtLoxone = 2700;
-    var maxCtLoxone = 6500;
+    var minCtLoxone = 2500;
+    var maxCtLoxone = 20000;
 
-    var minCtHomekit = 153;
-    var maxCtHomekit = 500;
+    var minCtHomekit = 50;
+    var maxCtHomekit = 400;
 
     var percent = 1 - ((ct - minCtHomekit) / (maxCtHomekit - minCtHomekit));
     var newValue = Math.round(minCtLoxone + ((maxCtLoxone - minCtLoxone) * percent));
