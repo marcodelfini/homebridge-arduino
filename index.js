@@ -91,9 +91,8 @@ function arduino(log, config) {
 			var query = url.parse(request.url, true).query;
 			if (query.d) {
 				self.log(query.d);
-				let buff = new Buffer(query.d);
-				let jsonData = buff.toString('ascii');
-				let data = JSON.parse("{\"service\":\"Window\",\"characteristic\":\"On\",\"value\":true}");
+				let jsonData = Buffer.from(query.d, 'base64').toString('utf-8');
+				let data = JSON.parse(jsonData);
 				self.log(data);
 			}else{
 				self.log("no");
