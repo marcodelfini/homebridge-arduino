@@ -97,7 +97,7 @@ function arduino(log, config) {
 						if(data.type == "set"){
 							self.functionService.setCharacteristic(Characteristic[data.characteristic], data.value);
 						}else{
-							response.write(self.functionService.getCharacteristic(Characteristic[data.characteristic]));
+							response.write(self.functionService.getCharacteristic(Characteristic[data.characteristic]).value);
 						}
 						response.end();
 					}
