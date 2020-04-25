@@ -1,6 +1,7 @@
 var Service, Characteristic, DoorState, UUIDGen;
 var http = require("http");
 var tools = require("./tools.js");
+var httpHandler = require("./http-handler.js");
 
 function arduino(log, config) {
 	if (!config) {
@@ -75,23 +76,30 @@ function arduino(log, config) {
 	
 	this.ValveEndActivation = null;
 	
+	const self = this;
+	
 	this.requestServer = http.createServer(function(request, response) {
+		let body = "";
+		request.on("data", function (data) { body += data; });
+		
 		if (request.url === "/add") {
 			response.writeHead(204);
 			response.end();
 		}
 
-		if (request.url == "/reachability") {
-			response.writeHead(204);
-			response.end();
-		}
+		try {
+			let jsonBody = JSON.parse(body);
 
-		if (request.url == "/remove") {
-			response.writeHead(204);
+			this.log(httpHandler.validateJsonBody(jsonBody));
+		} catch (error) {
+			response.writeHead(400, {'Content-Type': 'text/html'});
+		 	response.write("Bad Request");
 			response.end();
+			logError("sent malformed body: " + error.message);
+			return;
 		}
 	}.bind(this));
-	const self = this;
+	
 	this.requestServer.listen(this.ListeningPort, function() {
 		self.log("Listen http at " + self.ListeningPort + " port");
 	});
