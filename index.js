@@ -79,7 +79,7 @@ function arduino(log, config) {
 	
 	const self = this;
 	// {"auth":"","type":"set","service":"Window","characteristic":"TargetPosition","value":"100"}
-	// http://10.0.0.34:18089/?d=eyJhdXRoIjoiIiwic2VydmljZSI6IldpbmRvdyIsImNoYXJhY3RlcmlzdGljIjoiVGFyZ2V0UG9zaXRpb24iLCJ2YWx1ZSI6IjEwMCJ9
+	// http://10.0.0.34:18089/?d=eyJhdXRoIjoiIiwidHlwZSI6InNldCIsInNlcnZpY2UiOiJXaW5kb3ciLCJjaGFyYWN0ZXJpc3RpYyI6IlRhcmdldFBvc2l0aW9uIiwidmFsdWUiOiIxMDAifQ==
 	this.requestServer = http.createServer(function(request, response) {
 		var body = "";
 		request.on("data", function (data) { body += data; });
@@ -90,6 +90,8 @@ function arduino(log, config) {
 				if (query.d) {
 					var jsonData = Buffer.from(query.d, 'base64').toString('utf-8');
 					var data = JSON.parse(jsonData);
+					self.log(data.type);
+					self.log(["get", "set"].contains(data.type));
 					httpHandler.validateJsonData(data);
 					if(data.auth == self.auth){
 						response.writeHead(204);
