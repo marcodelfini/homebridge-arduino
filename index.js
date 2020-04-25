@@ -1,5 +1,6 @@
 var Service, Characteristic, DoorState, UUIDGen;
 var http = require("http");
+var url  = require('url');
 var tools = require("./tools.js");
 var httpHandler = require("./http-handler.js");
 
@@ -87,8 +88,9 @@ function arduino(log, config) {
 			response.end();
 		}
 		request.on("end", function () {
+			var query = url.parse(request.url, true).query;
 			try {
-				let buff = new Buffer(request.params.d);
+				let buff = new Buffer(query.d);
 				let jsonData = buff.toString('ascii');
 				let data = JSON.parse(jsonData);
 				self.log(data);
