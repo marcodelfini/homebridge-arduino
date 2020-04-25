@@ -90,8 +90,6 @@ function arduino(log, config) {
 				if (query.d) {
 					var jsonData = Buffer.from(query.d, 'base64').toString('utf-8');
 					var data = JSON.parse(jsonData);
-					self.log(data.type);
-					self.log(["get", "set"].contains(data.type));
 					httpHandler.validateJsonData(data);
 					if(data.auth == self.auth){
 						response.writeHead(204);

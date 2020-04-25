@@ -35,6 +35,6 @@ function validateJsonData(data) {
 	if (typeof data.characteristic !== "string")
 		throw new Error("property 'auth' has an invalid data type");
 	
-	if (["get", "set"].contains(data.type) == false)
+	if (["get", "set"].indexOf(data.type) == -1)
 		throw new Error("type can only be: get or set");
 }
