@@ -848,6 +848,16 @@ arduino.prototype._responseHandler = function (res, next) {
 				}
 			} else if (typeof jsonBody.WindowTargetPosition !== 'undefined') {
 				next(null, jsonBody.WindowTargetPosition);
+				if (typeof jsonBody.WindowPositionState !== 'undefined') {
+					// 0 DECREASING, 1 INCREASING, 2 STOPPED
+					if(jsonBody.WindowPositionState == 0){
+						this.functionService.getCharacteristic(Characteristic.PositionState).updateValue(Characteristic.PositionState.DECREASING);
+					}else if(jsonBody.WindowPositionState == 1){
+						this.functionService.getCharacteristic(Characteristic.PositionState).updateValue(Characteristic.PositionState.INCREASING);
+					}else{
+						this.functionService.getCharacteristic(Characteristic.PositionState).updateValue(Characteristic.PositionState.STOPPED);
+					}
+				}
 			} else if (typeof jsonBody.WindowPositionState !== 'undefined') {
 				// 0 DECREASING, 1 INCREASING, 2 STOPPED
 				if(jsonBody.WindowPositionState == 0){
