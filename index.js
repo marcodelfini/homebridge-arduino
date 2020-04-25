@@ -1,5 +1,6 @@
 var Service, Characteristic, DoorState, UUIDGen;
 var http = require("http");
+const ip = require('ip');
 var tools = require("./tools.js");
 
 function arduino(log, config) {
@@ -93,8 +94,8 @@ function arduino(log, config) {
 	}.bind(this));
 	const self = this;
 	this.requestServer.listen(this.ListeningPort, function() {
-		self.log("Listening (http) at "+self.ListeningPort);
-	});
+		this.log('Listen server: http://%s:%s', ip.address(), this.ListeningPort)
+	}).bind(this));
 }
 
 arduino.prototype.getServices = function () {	
@@ -467,6 +468,17 @@ arduino.prototype.getServices = function () {
 						}, (this.duration*1000));
 					}
 			});
+	}else if(this.AccessoryType == 15){ // Windows
+		var functionService = new Service.Window(this.Name);
+		
+		functionService.getCharacteristic(Characteristic.CurrentPosition) // percentage 0 full closed 100 full opened
+			.on('get', this.getWindowCurrentPosition.bind(this));
+		
+		functionService.getCharacteristic(Characteristic.TargetPosition) // percentage 0 full closed 100 full opened
+			.on('set', this.setWindowTargetPosition.bind(this));
+			
+		functionService.getCharacteristic(Characteristic.PositionState)
+			.on('get', this.getWindowPositionState.bind(this));
 	}else{ // Switch (0)
 		var functionService = new Service.Switch(this.Name);
 		functionService.getCharacteristic(Characteristic.On).updateValue(this.defaultState);
@@ -664,6 +676,22 @@ arduino.prototype.getAirQuality = function (next) {
 	this._makeRequest("?getAirQuality" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
 };
 
+// Window
+arduino.prototype.getWindowCurrentPosition = function (next) {
+	this._makeRequest("?getWindowCurrentPosition" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+};
+
+arduino.prototype.setWindowTargetPosition = function (newVal, next) {
+	this._makeRequest("?setWindowTargetPosition=" + newVal + "&auth=" + this.auth + "&uuid=" + this.uuid, next);
+};
+
+arduino.prototype.getWindowPositionState = function (next) {
+	this._makeRequest("?getWindowPositionState" + "&auth=" + this.auth+"&uuid="+this.uuid, next);
+};
+
+
+
+
 
 
 
@@ -806,6 +834,30 @@ arduino.prototype._responseHandler = function (res, next) {
 			} else if (typeof jsonBody.AirQuality !== 'undefined') {
 				// 0 Unknown, 1 Excellent, 2 Good, 3 Fair, 4 Inferior, 5 Poor
 				next(null, jsonBody.AirQuality);
+			// Window
+			} else if (typeof jsonBody.WindowCurrentPosition !== 'undefined') {
+				next(null, jsonBody.WindowCurrentPosition);
+				if (typeof jsonBody.WindowPositionState !== 'undefined') {
+					// 0 DECREASING, 1 INCREASING, 2 STOPPED
+					if(jsonBody.WindowPositionState == 0){
+						this.functionService.getCharacteristic(Characteristic.PositionState).updateValue(Characteristic.PositionState.DECREASING);
+					}else if(jsonBody.WindowPositionState == 1){
+						this.functionService.getCharacteristic(Characteristic.PositionState).updateValue(Characteristic.PositionState.INCREASING);
+					}else{
+						this.functionService.getCharacteristic(Characteristic.PositionState).updateValue(Characteristic.PositionState.STOPPED);
+					}
+				}
+			} else if (typeof jsonBody.WindowTargetPosition !== 'undefined') {
+				next(null, jsonBody.WindowTargetPosition);
+			} else if (typeof jsonBody.WindowPositionState !== 'undefined') {
+				// 0 DECREASING, 1 INCREASING, 2 STOPPED
+				if(jsonBody.WindowPositionState == 0){
+					next(null, Characteristic.PositionState.DECREASING);
+				}else if(jsonBody.WindowPositionState == 1){
+					next(null, Characteristic.PositionState.INCREASING);
+				}else{
+					next(null, Characteristic.PositionState.STOPPED);
+				}
 			// Error
 			} else {
 				this.log("nothing body: "+body);
