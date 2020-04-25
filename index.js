@@ -91,15 +91,13 @@ function arduino(log, config) {
 				let buff = new Buffer(request.params.d);
 				let jsonData = buff.toString('ascii');
 				let data = JSON.parse(jsonData);
-
+				self.log(data);
 				httpHandler.validateJsonData(data);
-				
-				this.log(data);
 			} catch (error) {
 				response.writeHead(400, {'Content-Type': 'text/html'});
 				response.write("Bad Request");
 				response.end();
-				this.log("sent malformed body: " + error.message);
+				self.log("sent malformed body: " + error.message);
 				return;
 			}
 		});
