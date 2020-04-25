@@ -80,7 +80,7 @@ function arduino(log, config) {
 	const self = this;
 	
 	this.requestServer = http.createServer(function(request, response) {
-		let body = "";
+		var body = "";
 		request.on("data", function (data) { body += data; });
 		
 		if (request.url === "/add") {
@@ -88,17 +88,15 @@ function arduino(log, config) {
 			response.end();
 		}
 		request.on("end", function () {
-			var query = url.parse(request.url, true).query;
-			if (query.d) {
-				self.log(query.d);
-				let jsonData = Buffer.from(query.d, 'base64').toString('utf-8');
-				let data = JSON.parse(jsonData);
-				self.log(data);
-			}else{
-				self.log("no");
-			}
 			try {
-				httpHandler.validateJsonData(data);
+				var query = url.parse(request.url, true).query;
+				if (query.d) {
+					self.log(query.d);
+					var jsonData = Buffer.from(query.d, 'base64').toString('utf-8');
+					var data = JSON.parse(jsonData);
+					self.log(data);
+					httpHandler.validateJsonData(data);
+				}
 			} catch (error) {
 				response.writeHead(400, {'Content-Type': 'text/html'});
 				response.write("Bad Request");
