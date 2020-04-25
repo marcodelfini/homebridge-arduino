@@ -89,13 +89,12 @@ function arduino(log, config) {
 		}
 		request.on("end", function () {
 			var query = url.parse(request.url, true).query;
-			let data = JSON.parse((new Buffer(query.d)).toString('ascii'));
+			let buff = new Buffer(query.d);
+			let jsonData = buff.toString('ascii');
+			let data = JSON.parse(jsonData);
 			self.log(data);
 			try {
-				let data = JSON.parse((new Buffer(query.d)).toString('ascii'));
-				self.log(data);
-				
-				//httpHandler.validateJsonData(data);
+				httpHandler.validateJsonData(data);
 			} catch (error) {
 				response.writeHead(400, {'Content-Type': 'text/html'});
 				response.write("Bad Request");
