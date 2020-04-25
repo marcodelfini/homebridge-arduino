@@ -94,8 +94,8 @@ function arduino(log, config) {
 	}.bind(this));
 	const self = this;
 	this.requestServer.listen(this.ListeningPort, function() {
-		this.log('Listen server: http://%s:%s', ip.address(), this.ListeningPort)
-	}).bind(this));
+		self.log('Listen server: http://%s:%s', ip.address(), self.ListeningPort)
+	});
 }
 
 arduino.prototype.getServices = function () {	

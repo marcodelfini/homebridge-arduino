@@ -147,6 +147,12 @@
 						"enum": [
 							14
 						]
+					},
+					{
+						"title": "Window (15)",
+						"enum": [
+							15
+						]
 					}
 				],
 				"required": true,
