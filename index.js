@@ -95,7 +95,7 @@ function arduino(log, config) {
 			response.writeHead(400, {'Content-Type': 'text/html'});
 		 	response.write("Bad Request");
 			response.end();
-			logError("sent malformed body: " + error.message);
+			this.log("sent malformed body: " + error.message);
 			return;
 		}
 	}.bind(this));
