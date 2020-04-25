@@ -78,7 +78,7 @@ function arduino(log, config) {
 	this.ValveEndActivation = null;
 	
 	const self = this;
-	// {"auth":"","service":"Window","characteristic":"TargetPosition","value":"100"}
+	// {"auth":"","type":"set","service":"Window","characteristic":"TargetPosition","value":"100"}
 	// http://10.0.0.34:18089/?d=eyJhdXRoIjoiIiwic2VydmljZSI6IldpbmRvdyIsImNoYXJhY3RlcmlzdGljIjoiVGFyZ2V0UG9zaXRpb24iLCJ2YWx1ZSI6IjEwMCJ9
 	this.requestServer = http.createServer(function(request, response) {
 		var body = "";
@@ -92,9 +92,13 @@ function arduino(log, config) {
 					var data = JSON.parse(jsonData);
 					httpHandler.validateJsonData(data);
 					if(data.auth == self.auth){
-						self.log("Service: "+data.service+", characteristic: "+data.characteristic+", value: "+data.value);
-						self.functionService.setCharacteristic(Characteristic[data.characteristic], data.value);
 						response.writeHead(204);
+						self.log("Service: "+data.service+", characteristic: "+data.characteristic+", value: "+data.value);
+						if(data.type == "set"){
+							self.functionService.setCharacteristic(Characteristic[data.characteristic], data.value);
+						}else{
+							response.write(self.functionService.getCharacteristic(Characteristic[data.characteristic]));
+						}
 						response.end();
 					}
 				}
@@ -920,10 +924,4 @@ module.exports = function (hb) {
 	DoorState = hb.hap.Characteristic.CurrentDoorState;
 	
 	hb.registerAccessory("homebridge-arduino", "Arduino", arduino);
-};
-
-arduino.prototype.ReturnCharacteristic = function (name) {
-	if(name == "TargetPosition"){
-		return Characteristic.TargetPosition;
-	}
 };
