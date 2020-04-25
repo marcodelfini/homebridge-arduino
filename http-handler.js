@@ -1,30 +1,30 @@
 module.exports = {
-	validateJsonBody, 
+	validateJsonData
 };
 
 /**
- * validates that the body has the required format
+ * validates that the data has the required format
  * developers can add MORE field but not LESS
  *
- * body format:
+ * data format:
  * {
  *      service: "switchOne", // <optional>: data type must be string
  *      characteristic: "On", // <required>: data type must be string
  *      value: 56 // <required>
  * }
  *
- * @param body
+ * @param data
  */
-function validateJsonBody(body) {
-	if (typeof body !== "object")
+function validateJsonData(data) {
+	if (typeof data !== "object")
 		throw new Error("Json string is not an object");
 
-	if (!(body.hasOwnProperty("characteristic") || body.hasOwnProperty("value")))
+	if (!(data.hasOwnProperty("characteristic") || data.hasOwnProperty("value")))
 		throw new Error("Missing required property");
 
-	if (body.hasOwnProperty("service") && typeof body.service !== "string")
+	if (data.hasOwnProperty("service") && typeof data.service !== "string")
 		throw new Error("property 'service' has an invalid data type");
 
-	if (typeof body.characteristic !== "string")
+	if (typeof data.characteristic !== "string")
 		throw new Error("property 'characteristic' has an invalid data type");
 }

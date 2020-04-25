@@ -86,18 +86,23 @@ function arduino(log, config) {
 			response.writeHead(204);
 			response.end();
 		}
+		request.on("end", function () {
+			try {
+				let buff = new Buffer(request.params.d);
+				let jsonData = buff.toString('ascii');
+				let data = JSON.parse(jsonData);
 
-		try {
-			let jsonBody = JSON.parse(body);
-
-			this.log(httpHandler.validateJsonBody(jsonBody));
-		} catch (error) {
-			response.writeHead(400, {'Content-Type': 'text/html'});
-		 	response.write("Bad Request");
-			response.end();
-			this.log("sent malformed body: " + error.message);
-			return;
-		}
+				httpHandler.validateJsonData(data);
+				
+				this.log(data);
+			} catch (error) {
+				response.writeHead(400, {'Content-Type': 'text/html'});
+				response.write("Bad Request");
+				response.end();
+				this.log("sent malformed body: " + error.message);
+				return;
+			}
+		});
 	}.bind(this));
 	
 	this.requestServer.listen(this.ListeningPort, function() {
