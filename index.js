@@ -1,6 +1,5 @@
 var Service, Characteristic, DoorState, UUIDGen;
 var http = require("http");
-const ip = require('ip');
 var tools = require("./tools.js");
 
 function arduino(log, config) {
@@ -94,7 +93,7 @@ function arduino(log, config) {
 	}.bind(this));
 	const self = this;
 	this.requestServer.listen(this.ListeningPort, function() {
-		self.log('Listen server: http://%s:%s', ip.address(), self.ListeningPort)
+		self.log('Listen server: http://%s:%s', self.requestServer.address(), self.ListeningPort)
 	});
 }
 
