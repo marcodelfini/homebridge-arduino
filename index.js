@@ -83,10 +83,6 @@ function arduino(log, config) {
 		var body = "";
 		request.on("data", function (data) { body += data; });
 		
-		if (request.url === "/add") {
-			response.writeHead(204);
-			response.end();
-		}
 		request.on("end", function () {
 			try {
 				var query = url.parse(request.url, true).query;
@@ -96,6 +92,9 @@ function arduino(log, config) {
 					httpHandler.validateJsonData(data);
 					if(data.auth == self.auth){
 						self.log("Service: "+data.service+", characteristic: "+data.characteristic+", value: "+data.value);
+						self.functionService.setCharacteristic(Characteristic.(data.characteristic), data.value);
+						response.writeHead(204);
+						response.end();
 					}
 				}
 			} catch (error) {
