@@ -93,7 +93,7 @@ function arduino(log, config) {
 					httpHandler.validateJsonData(data);
 					if(data.auth == self.auth){
 						response.writeHead(204);
-						self.log("Service: "+data.service+", characteristic: "+data.characteristic+", value: "+data.value);
+						self.log("auth: "+data.auth+", type: "+data.type+", service: "+data.service+", characteristic: "+data.characteristic+", value: "+data.value);
 						if(data.type == "set"){
 							self.functionService.setCharacteristic(Characteristic[data.characteristic], data.value);
 						}else{
