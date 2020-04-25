@@ -89,10 +89,15 @@ function arduino(log, config) {
 		}
 		request.on("end", function () {
 			var query = url.parse(request.url, true).query;
-			let buff = new Buffer(query.d);
-			let jsonData = buff.toString('ascii');
-			let data = JSON.parse(jsonData);
-			self.log(data);
+			if (query.d) {
+				self.log(query.d);
+				let buff = new Buffer(query.d);
+				let jsonData = buff.toString('ascii');
+				let data = JSON.parse(jsonData);
+				self.log(data);
+			}else{
+				self.log("no");
+			}
 			try {
 				httpHandler.validateJsonData(data);
 			} catch (error) {
