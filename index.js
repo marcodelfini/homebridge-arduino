@@ -78,7 +78,8 @@ function arduino(log, config) {
 	this.ValveEndActivation = null;
 	
 	const self = this;
-	
+	// {"auth":"","service":"Window","characteristic":"TargetPosition","value":"100"}
+	// http://10.0.0.34:18089/?d=eyJhdXRoIjoiIiwic2VydmljZSI6IldpbmRvdyIsImNoYXJhY3RlcmlzdGljIjoiVGFyZ2V0UG9zaXRpb24iLCJ2YWx1ZSI6IjEwMCJ9
 	this.requestServer = http.createServer(function(request, response) {
 		var body = "";
 		request.on("data", function (data) { body += data; });
@@ -92,7 +93,7 @@ function arduino(log, config) {
 					httpHandler.validateJsonData(data);
 					if(data.auth == self.auth){
 						self.log("Service: "+data.service+", characteristic: "+data.characteristic+", value: "+data.value);
-						self.functionService.setCharacteristic(self.ReturnCharacteristic(data.characteristic), data.value);
+						self.functionService.setCharacteristic(Characteristic[data.characteristic], data.value);
 						response.writeHead(204);
 						response.end();
 					}
