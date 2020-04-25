@@ -93,7 +93,7 @@ function arduino(log, config) {
 				self.log(query.d);
 				let buff = new Buffer(query.d);
 				let jsonData = buff.toString('ascii');
-				let data = JSON.parse(jsonData);
+				let data = JSON.parse("{\"service\":\"Window\",\"characteristic\":\"On\",\"value\":true}");
 				self.log(data);
 			}else{
 				self.log("no");
