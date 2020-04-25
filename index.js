@@ -856,6 +856,7 @@ arduino.prototype._responseHandler = function (res, next) {
 						this.functionService.getCharacteristic(Characteristic.PositionState).updateValue(Characteristic.PositionState.INCREASING);
 					}else{
 						this.functionService.getCharacteristic(Characteristic.PositionState).updateValue(Characteristic.PositionState.STOPPED);
+						this.functionService.getCharacteristic(Characteristic.CurrentPosition).updateValue(jsonBody.WindowTargetPosition);
 					}
 				}
 			} else if (typeof jsonBody.WindowPositionState !== 'undefined') {
