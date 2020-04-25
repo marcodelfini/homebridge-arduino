@@ -92,7 +92,7 @@ function arduino(log, config) {
 					httpHandler.validateJsonData(data);
 					if(data.auth == self.auth){
 						self.log("Service: "+data.service+", characteristic: "+data.characteristic+", value: "+data.value);
-						self.functionService.setCharacteristic(Characteristic.(data.characteristic), data.value);
+						self.functionService.setCharacteristic(self.ReturnCharacteristic(data.characteristic), data.value);
 						response.writeHead(204);
 						response.end();
 					}
@@ -919,4 +919,10 @@ module.exports = function (hb) {
 	DoorState = hb.hap.Characteristic.CurrentDoorState;
 	
 	hb.registerAccessory("homebridge-arduino", "Arduino", arduino);
+};
+
+arduino.prototype.ReturnCharacteristic = function (name) {
+	if(name == "TargetPosition"){
+		return Characteristic.TargetPosition;
+	}
 };
