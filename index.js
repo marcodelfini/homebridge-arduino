@@ -91,11 +91,12 @@ function arduino(log, config) {
 			try {
 				var query = url.parse(request.url, true).query;
 				if (query.d) {
-					self.log(query.d);
 					var jsonData = Buffer.from(query.d, 'base64').toString('utf-8');
 					var data = JSON.parse(jsonData);
-					self.log(data);
 					httpHandler.validateJsonData(data);
+					if(data.auth == self.auth){
+						self.log("Service: "+data.service+", characteristic: "+data.characteristic+", value: "+data.value);
+					}
 				}
 			} catch (error) {
 				response.writeHead(400, {'Content-Type': 'text/html'});
