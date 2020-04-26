@@ -24,7 +24,7 @@ function validateJsonData(data) {
 	if (!(data.hasOwnProperty("auth") || data.hasOwnProperty("type") || data.hasOwnProperty("characteristic") || data.hasOwnProperty("value")))
 		throw new Error("Missing required property");
 
-	if (typeof data.auth !== "string")
+	if (typeof data.auth !== "string" && data.auth != "")
 		throw new Error("property 'auth' has an invalid data type");
 
 	if (typeof data.type !== "string")
