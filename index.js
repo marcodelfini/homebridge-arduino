@@ -2,7 +2,7 @@ var Service, Characteristic, DoorState, UUIDGen;
 var http = require("http");
 var url  = require('url');
 var tools = require("./tools.js");
-var httpHandler = require("./http-handler.js");
+var f = require("./functions.js");
 
 function arduino(log, config) {
 	if (!config) {
@@ -80,6 +80,8 @@ function arduino(log, config) {
 	const self = this;
 	// {"auth":"","type":"set","service":"Window","characteristic":"TargetPosition","value":"100"}
 	// http://10.0.0.34:18089/?d=eyJhdXRoIjoiIiwidHlwZSI6InNldCIsInNlcnZpY2UiOiJXaW5kb3ciLCJjaGFyYWN0ZXJpc3RpYyI6IlRhcmdldFBvc2l0aW9uIiwidmFsdWUiOiIxMDAifQ==
+	// {"auth":"","type":"get","service":"Window","characteristic":"CurrentPosition","value":"0"}
+	// 10.0.0.34:18089/?d=eyJhdXRoIjoiIiwidHlwZSI6ImdldCIsInNlcnZpY2UiOiJXaW5kb3ciLCJjaGFyYWN0ZXJpc3RpYyI6IkN1cnJlbnRQb3NpdGlvbiIsInZhbHVlIjoiMCJ9
 	this.requestServer = http.createServer(function(request, response) {
 		var body = "";
 		request.on("data", function (data) { body += data; });
@@ -90,16 +92,30 @@ function arduino(log, config) {
 				if (query.d) {
 					var jsonData = Buffer.from(query.d, 'base64').toString('utf-8');
 					var data = JSON.parse(jsonData);
-					httpHandler.validateJsonData(data);
+					f.validateJsonData(data);
 					if(data.auth == self.auth){
-						response.writeHead(204);
 						self.log("auth: "+data.auth+", type: "+data.type+", service: "+data.service+", characteristic: "+data.characteristic+", value: "+data.value);
-						if(data.type == "set"){
-							self.functionService.setCharacteristic(Characteristic[data.characteristic], data.value);
+						if(f.validateCharacteristic(data.characteristic, data.type, self)){
+							if(data.type == "set"){
+								response.writeHead(200);
+								self.functionService.setCharacteristic(Characteristic[data.characteristic], data.value);
+								response.write("200 OK");
+							}else{
+								response.writeHead(200);
+								response.write(self.functionService.getCharacteristic(Characteristic[data.characteristic]).value);
+							}
+							response.end();
 						}else{
-							response.write(self.functionService.getCharacteristic(Characteristic[data.characteristic]).value);
+							response.writeHead(406, {'Content-Type': 'text/html'});
+							response.write("406 Not Acceptable");
+							response.end();
+							self.log("406 Not Acceptable");
 						}
+					}else{
+						response.writeHead(401, {'Content-Type': 'text/html'});
+						response.write("401 Unauthorized");
 						response.end();
+						self.log("401 Unauthorized");
 					}
 				}
 			} catch (error) {
@@ -210,7 +226,7 @@ arduino.prototype.getServices = function () {
 			.on("get", this.getStatus.bind(this))
 			.on("set", this.setStatus.bind(this));
 			
-			functionService.getCharacteristic(Characteristic.OutletInUse).on("get", this.getStatus.bind(this));
+		functionService.getCharacteristic(Characteristic.OutletInUse).on("get", this.getStatus.bind(this));
 	}else if(this.AccessoryType == 3){ // GarageDoorOpener
 		var functionService = new Service.GarageDoorOpener(this.Name);
 		functionService.getCharacteristic(Characteristic.CurrentDoorState).on("get", this.getCurrentDoorState.bind(this));
