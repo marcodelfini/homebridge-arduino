@@ -96,15 +96,18 @@ function arduino(log, config) {
 					if(data.auth == self.auth){
 						self.log("auth: "+data.auth+", type: "+data.type+", service: "+data.service+", characteristic: "+data.characteristic+", value: "+data.value);
 						if(f.validateCharacteristic(data.characteristic, data.type, self) == true){
-							/*if(data.type == "set"){
+							if(data.type == "set"){
 								response.writeHead(200);
-								self.functionService.setCharacteristic(Characteristic[data.characteristic], data.value);
+								self.log("s");
+								//self.functionService.setCharacteristic(Characteristic[data.characteristic], data.value);
 								response.write("200 OK");
 							}else{
 								response.writeHead(200);
-								response.write(self.functionService.getCharacteristic(Characteristic[data.characteristic]).value);
+								self.log("g "+self.functionService.getCharacteristic(Characteristic[data.characteristic]).value);
+								//response.write(self.functionService.getCharacteristic(Characteristic[data.characteristic]).value);
+								response.write("200 OK");
 							}
-							response.end();*/
+							response.end();
 						}else{
 							response.writeHead(406, {'Content-Type': 'text/html'});
 							response.write("406 Not Acceptable");
