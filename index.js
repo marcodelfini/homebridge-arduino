@@ -95,8 +95,8 @@ function arduino(log, config) {
 					f.validateJsonData(data);
 					if(data.auth == self.auth){
 						self.log("auth: "+data.auth+", type: "+data.type+", service: "+data.service+", characteristic: "+data.characteristic+", value: "+data.value);
-						/*if(f.validateCharacteristic(data.characteristic, data.type, self) == true){
-							if(data.type == "set"){
+						if(f.validateCharacteristic(data.characteristic, data.type, self) == true){
+							/*if(data.type == "set"){
 								response.writeHead(200);
 								self.functionService.setCharacteristic(Characteristic[data.characteristic], data.value);
 								response.write("200 OK");
@@ -104,13 +104,13 @@ function arduino(log, config) {
 								response.writeHead(200);
 								response.write(self.functionService.getCharacteristic(Characteristic[data.characteristic]).value);
 							}
-							response.end();
+							response.end();*/
 						}else{
 							response.writeHead(406, {'Content-Type': 'text/html'});
 							response.write("406 Not Acceptable");
 							response.end();
 							self.log("406 Not Acceptable");
-						}*/
+						}
 					}else{
 						response.writeHead(401, {'Content-Type': 'text/html'});
 						response.write("401 Unauthorized");
