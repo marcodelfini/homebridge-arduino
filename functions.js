@@ -40,66 +40,66 @@ function validateJsonData(data) {
 		throw new Error("property 'characteristic' has an invalid data type");
 }
 
-function validateCharacteristic(char, type, this) {
+function validateCharacteristic(char, type, self) {
 	if (typeof char === "string"){
-		if(this.AccessoryType == 0){ // Switch
+		if(self.AccessoryType == 0){ // Switch
 			if(["On"].includes(char) == true && ["get", "set"].includes(type) == true){
 				return true;
 			}
-		}else if(this.AccessoryType == 1){ // Lightbulb
-			if((["On"].includes(char) == true && ["get", "set"].includes(type) == true) || (this.optionalCharac1 == true && ["Brightness"].includes(char) == true && ["get", "set"].includes(type) == true) || (this.optionalCharac2 == true && ["Hue"].includes(char) == true && ["get", "set"].includes(type) == true) || (this.optionalCharac3 == true && ["Saturation"].includes(char) == true && ["get", "set"].includes(type) == true) || (this.optionalCharac4 == true && ["ColorTemperature"].includes(char) == true && ["get", "set"].includes(type) == true)){
+		}else if(self.AccessoryType == 1){ // Lightbulb
+			if((["On"].includes(char) == true && ["get", "set"].includes(type) == true) || (self.optionalCharac1 == true && ["Brightness"].includes(char) == true && ["get", "set"].includes(type) == true) || (self.optionalCharac2 == true && ["Hue"].includes(char) == true && ["get", "set"].includes(type) == true) || (self.optionalCharac3 == true && ["Saturation"].includes(char) == true && ["get", "set"].includes(type) == true) || (self.optionalCharac4 == true && ["ColorTemperature"].includes(char) == true && ["get", "set"].includes(type) == true)){
 				return true;
 			}
-		}else if(this.AccessoryType == 2){ // Outlet
+		}else if(self.AccessoryType == 2){ // Outlet
 			if((["On"].includes(char) == true && ["get", "set"].includes(type) == true) || (["OutletInUse"].includes(char) == true && ["get"].includes(type) == true)){
 				return true;
 			}
-		}else if(this.AccessoryType == 3){ // GarageDoorOpener
+		}else if(self.AccessoryType == 3){ // GarageDoorOpener
 			if((["CurrentDoorState"].includes(char) == true && ["get"].includes(type) == true) && (["TargetDoorState"].includes(char) == true && ["get", "set"].includes(type) == true) && (["ObstructionDetected"].includes(char) == true && ["get"].includes(type) == true)){
 				return true;
 			}
-		}else if(this.AccessoryType == 4){ // HumiditySensor
+		}else if(self.AccessoryType == 4){ // HumiditySensor
 			if(["CurrentRelativeHumidity"].includes(char) == true && ["get"].includes(type) == true){
 				return true;
 			}
-		}else if(this.AccessoryType == 5){ // Fan
-			if((["On"].includes(char) == true && ["get", "set"].includes(type) == true) || (this.optionalCharac1 == true && ["RotationDirection"].includes(char) == true && ["get", "set"].includes(type) == true) || (this.optionalCharac2 == true && ["RotationSpeed"].includes(char) == true && ["get", "set"].includes(type) == true)){
+		}else if(self.AccessoryType == 5){ // Fan
+			if((["On"].includes(char) == true && ["get", "set"].includes(type) == true) || (self.optionalCharac1 == true && ["RotationDirection"].includes(char) == true && ["get", "set"].includes(type) == true) || (self.optionalCharac2 == true && ["RotationSpeed"].includes(char) == true && ["get", "set"].includes(type) == true)){
 				return true;
 			}
-		}else if(this.AccessoryType == 6){ // TemperatureSensor
+		}else if(self.AccessoryType == 6){ // TemperatureSensor
 			if(["CurrentTemperature"].includes(char) == true && ["get"].includes(type) == true){
 				return true;
 			}
-		}else if(this.AccessoryType == 7){ // LightSensor
+		}else if(self.AccessoryType == 7){ // LightSensor
 			if(["CurrentAmbientLightLevel"].includes(char) == true && ["get"].includes(type) == true){
 				return true;
 			}
-		}else if(this.AccessoryType == 8){ // LockMechanism
+		}else if(self.AccessoryType == 8){ // LockMechanism
 			if((["LockCurrentState"].includes(char) == true && ["get"].includes(type) == true) || (["LockTargetState"].includes(char) == true && ["get", "set"].includes(type) == true)){
 				return true;
 			}
-		}else if(this.AccessoryType == 9){ // MotionSensor
+		}else if(self.AccessoryType == 9){ // MotionSensor
 			if(["MotionDetected"].includes(char) == true && ["get"].includes(type) == true){
 				return true;
 			}
-		}else if(this.AccessoryType == 10){ // LeakSensor
+		}else if(self.AccessoryType == 10){ // LeakSensor
 			if(["LeakDetected"].includes(char) == true && ["get"].includes(type) == true){
 				return true;
 			}
-		}else if(this.AccessoryType == 11){ // Thermostat
+		}else if(self.AccessoryType == 11){ // Thermostat
 			if((["CurrentHeatingCoolingState"].includes(char) == true && ["get"].includes(type) == true) || (["TargetHeatingCoolingState"].includes(char) == true && ["get", "set"].includes(type) == true) || (["CurrentTemperature"].includes(char) == true && ["get"].includes(type) == true) || (["TargetTemperature"].includes(char) == true && ["get", "set"].includes(type) == true) || (["TemperatureDisplayUnits"].includes(char) == true && ["get"].includes(type) == true)){
 				return true;
 			}
-		}else if(this.AccessoryType == 12){ // Valve
-			if((["Active"].includes(char) == true && ["get", "set"].includes(type) == true) || (["InUse"].includes(char) == true && ["get"].includes(type) == true) || (this.duration > 0 && ["SetDuration"].includes(char) == true && ["get", "set"].includes(type) == true) || (this.duration > 0 && ["RemainingDuration"].includes(char) == true && ["get"].includes(type) == true) || (["StatusFault"].includes(char) == true && ["get"].includes(type) == true)){
+		}else if(self.AccessoryType == 12){ // Valve
+			if((["Active"].includes(char) == true && ["get", "set"].includes(type) == true) || (["InUse"].includes(char) == true && ["get"].includes(type) == true) || (self.duration > 0 && ["SetDuration"].includes(char) == true && ["get", "set"].includes(type) == true) || (self.duration > 0 && ["RemainingDuration"].includes(char) == true && ["get"].includes(type) == true) || (["StatusFault"].includes(char) == true && ["get"].includes(type) == true)){
 				return true;
 			}
-		}else if(this.AccessoryType == 13){ // AirQualitySensor
+		}else if(self.AccessoryType == 13){ // AirQualitySensor
 			if(["AirQuality"].includes(char) == true && ["get"].includes(type) == true){
 				return true;
 			}
 		// (14) Dummy Switch not because is a virtual switch
-		}else if(this.AccessoryType == 15){ // Windows
+		}else if(self.AccessoryType == 15){ // Windows
 			if((["CurrentPosition"].includes(char) == true && ["get"].includes(type) == true) || (["TargetPosition"].includes(char) == true && ["set"].includes(type) == true) || (["PositionState"].includes(char) == true && ["get"].includes(type) == true)){
 				return true;
 			}
