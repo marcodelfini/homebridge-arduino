@@ -104,7 +104,7 @@ function arduino(log, config) {
 							}else{
 								response.writeHead(200);
 								self.log("g "+self.functionService.getCharacteristic(Characteristic[data.characteristic]).value);
-								//response.write(self.functionService.getCharacteristic(Characteristic[data.characteristic]).value);
+								response.write(self.functionService.getCharacteristic(Characteristic[data.characteristic]).value);
 								response.write("200 OK");
 							}
 							response.end();
