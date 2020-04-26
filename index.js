@@ -91,7 +91,9 @@ function arduino(log, config) {
 				var query = url.parse(request.url, true).query;
 				if (query.d) {
 					var jsonData = Buffer.from(query.d, 'base64').toString('utf-8');
+					self.log(jsonData);
 					var data = JSON.parse(jsonData);
+					self.log(data);
 					f.validateJsonData(data);
 					if(data.auth == self.auth){
 						self.log("auth: "+data.auth+", type: "+data.type+", service: "+data.service+", characteristic: "+data.characteristic+", value: "+data.value);
