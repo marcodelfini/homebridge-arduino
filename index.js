@@ -94,7 +94,8 @@ function arduino(log, config) {
 					self.log(jsonData);
 					var data = JSON.parse(jsonData);
 					self.log(data);
-					f.validateJsonData(data);
+					self.log(f.validateCharacteristic(data.characteristic, data.type, self));
+					self.log(f.validateJsonData(data));
 					if(data.auth == self.auth){
 						self.log("auth: "+data.auth+", type: "+data.type+", service: "+data.service+", characteristic: "+data.characteristic+", value: "+data.value);
 						if(f.validateCharacteristic(data.characteristic, data.type, self)){
