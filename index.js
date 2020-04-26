@@ -98,14 +98,11 @@ function arduino(log, config) {
 						if(f.validateCharacteristic(data.characteristic, data.type, self) == true){
 							if(data.type == "set"){
 								response.writeHead(200, {'Content-Type': 'text/plain'});
-								self.log("s");
 								self.functionService.setCharacteristic(Characteristic[data.characteristic], data.value);
 								response.write("200 OK");
 							}else{
 								response.writeHead(200, {'Content-Type': 'text/plain'});
-								self.log("g "+self.functionService.getCharacteristic(Characteristic[data.characteristic]).value.toString());
 								response.write(self.functionService.getCharacteristic(Characteristic[data.characteristic]).value.toString());
-								response.write("200 OK");
 							}
 							response.end();
 						}else{
