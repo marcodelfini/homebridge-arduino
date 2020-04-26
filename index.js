@@ -102,8 +102,7 @@ function arduino(log, config) {
 								response.write("200 OK");
 							}else{
 								response.writeHead(200, {'Content-Type': 'text/plain'});
-								self.log(JSON.stringify({ data.characteristic: self.functionService.getCharacteristic(Characteristic[data.characteristic]).value.toString() }));
-								response.write(JSON.stringify({ data.characteristic: self.functionService.getCharacteristic(Characteristic[data.characteristic]).value.toString() }));
+								response.write(self.functionService.getCharacteristic(Characteristic[data.characteristic]).value.toString());
 							}
 							response.end();
 						}else{
