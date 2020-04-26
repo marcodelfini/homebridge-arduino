@@ -91,14 +91,11 @@ function arduino(log, config) {
 				var query = url.parse(request.url, true).query;
 				if (query.d) {
 					var jsonData = Buffer.from(query.d, 'base64').toString('utf-8');
-					self.log(jsonData);
 					var data = JSON.parse(jsonData);
-					self.log(data);
-					self.log(f.validateCharacteristic(data.characteristic, data.type, self));
-					self.log(f.validateJsonData(data));
+					f.validateJsonData(data);
 					if(data.auth == self.auth){
 						self.log("auth: "+data.auth+", type: "+data.type+", service: "+data.service+", characteristic: "+data.characteristic+", value: "+data.value);
-						if(f.validateCharacteristic(data.characteristic, data.type, self)){
+						/*if(f.validateCharacteristic(data.characteristic, data.type, self) == true){
 							if(data.type == "set"){
 								response.writeHead(200);
 								self.functionService.setCharacteristic(Characteristic[data.characteristic], data.value);
@@ -113,7 +110,7 @@ function arduino(log, config) {
 							response.write("406 Not Acceptable");
 							response.end();
 							self.log("406 Not Acceptable");
-						}
+						}*/
 					}else{
 						response.writeHead(401, {'Content-Type': 'text/html'});
 						response.write("401 Unauthorized");
