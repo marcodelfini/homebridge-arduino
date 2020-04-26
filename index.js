@@ -94,7 +94,7 @@ function arduino(log, config) {
 					var data = JSON.parse(jsonData);
 					f.validateJsonData(data);
 					if(data.auth == self.auth){
-						self.log("auth: "+data.auth+", type: "+data.type+", service: "+data.service+", characteristic: "+data.characteristic+", value: "+data.value);
+						if (self.logLevel >= 2) { self.log("auth: "+data.auth+", type: "+data.type+", service: "+data.service+", characteristic: "+data.characteristic+", value: "+data.value); }
 						if(f.validateCharacteristic(data.characteristic, data.type, self) == true){
 							if(data.type == "set"){
 								response.writeHead(200, {'Content-Type': 'text/plain'});
@@ -102,7 +102,8 @@ function arduino(log, config) {
 								response.write("200 OK");
 							}else{
 								response.writeHead(200, {'Content-Type': 'text/plain'});
-								response.write(self.functionService.getCharacteristic(Characteristic[data.characteristic]).value.toString());
+								self.log(JSON.stringify({ data.characteristic: self.functionService.getCharacteristic(Characteristic[data.characteristic]).value.toString() }));
+								response.write(JSON.stringify({ data.characteristic: self.functionService.getCharacteristic(Characteristic[data.characteristic]).value.toString() }));
 							}
 							response.end();
 						}else{
