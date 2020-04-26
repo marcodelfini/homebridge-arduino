@@ -97,14 +97,14 @@ function arduino(log, config) {
 						self.log("auth: "+data.auth+", type: "+data.type+", service: "+data.service+", characteristic: "+data.characteristic+", value: "+data.value);
 						if(f.validateCharacteristic(data.characteristic, data.type, self) == true){
 							if(data.type == "set"){
-								response.writeHead(200);
+								response.writeHead(200, {'Content-Type': 'text/plain'});
 								self.log("s");
-								//self.functionService.setCharacteristic(Characteristic[data.characteristic], data.value);
+								self.functionService.setCharacteristic(Characteristic[data.characteristic], data.value);
 								response.write("200 OK");
 							}else{
-								response.writeHead(200);
-								self.log("g "+self.functionService.getCharacteristic(Characteristic[data.characteristic]).value);
-								response.write(self.functionService.getCharacteristic(Characteristic[data.characteristic]).value);
+								response.writeHead(200, {'Content-Type': 'text/plain'});
+								self.log("g "+self.functionService.getCharacteristic(Characteristic[data.characteristic]).value.toString());
+								response.write(self.functionService.getCharacteristic(Characteristic[data.characteristic]).value.toString());
 								response.write("200 OK");
 							}
 							response.end();
